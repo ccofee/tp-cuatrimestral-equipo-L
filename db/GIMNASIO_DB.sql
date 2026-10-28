@@ -1,12 +1,3 @@
--- ============================================================
--- TPI Programacion III - Equipo L
--- Sistema de Gestion para Gimnasio Semi Personalizado
--- Script de creacion de la base
---
--- Etapa 1: arrancamos con las dos entidades maestras que no
--- dependen de ninguna otra. El resto del modelo (USUARIOS,
--- ALUMNOS y RESERVAS) se agrega en las etapas siguientes.
--- ============================================================
 
 USE master
 GO
@@ -24,10 +15,6 @@ GO
 USE GIMNASIO_DB
 GO
 
--- ------------------------------------------------------------
--- PLANES: el catalogo de membresias que vende el gimnasio.
--- ClasesSemanales es el tope de reservas por semana.
--- ------------------------------------------------------------
 CREATE TABLE PLANES (
     Id              int IDENTITY(1,1)   NOT NULL,
     Descripcion     varchar(50)         NOT NULL,
@@ -38,10 +25,6 @@ CREATE TABLE PLANES (
 )
 GO
 
--- ------------------------------------------------------------
--- HORARIOS: los bloques de clase que se repiten cada semana.
--- DiaSemana: 1 = lunes ... 7 = domingo.
--- ------------------------------------------------------------
 CREATE TABLE HORARIOS (
     Id          int IDENTITY(1,1)   NOT NULL,
     DiaSemana   int                 NOT NULL,
@@ -52,10 +35,6 @@ CREATE TABLE HORARIOS (
     CONSTRAINT PK_HORARIOS PRIMARY KEY (Id)
 )
 GO
-
--- ------------------------------------------------------------
--- Unas pocas filas para que las grillas muestren algo.
--- ------------------------------------------------------------
 
 INSERT INTO PLANES (Descripcion, Precio, ClasesSemanales) VALUES
     ('Plan 2 dias', 18000.00, 2),
