@@ -1,0 +1,45 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="Presentacion.SiteMaster" %>
+
+<!DOCTYPE html>
+<html lang="es">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title><%: Page.Title %> &middot; Gimnasio Semi Personalizado</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <form id="form1" runat="server">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="Default.aspx">Gimnasio</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrincipal" aria-controls="navPrincipal" aria-expanded="false" aria-label="Mostrar navegacion">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navPrincipal">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="Planes.aspx">Planes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Alumnos.aspx">Alumnos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Usuarios.aspx">Usuarios</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Horarios.aspx">Horarios</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Reservas.aspx">Reservas</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container my-4 flex-grow-1">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </main>
+
+        <footer class="bg-light border-top py-3">
+            <div class="container text-center text-muted">
+                <small>TPI Programacion III &middot; Equipo L</small>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    </form>
+</body>
+</html>
