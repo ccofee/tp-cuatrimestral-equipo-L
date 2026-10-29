@@ -80,6 +80,13 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Horarios.aspx.cs">
+      <DependentUpon>Horarios.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Horarios.aspx.designer.cs">
+      <DependentUpon>Horarios.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Alumnos.aspx" />
@@ -87,6 +94,7 @@
     <Content Include="Site.Master" />
     <Content Include="Planes.aspx" />
     <Content Include="Web.config" />
+    <Content Include="Horarios.aspx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dominio\Dominio.csproj">
