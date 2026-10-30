@@ -58,6 +58,13 @@
     <Compile Include="Alumnos.aspx.designer.cs">
       <DependentUpon>Alumnos.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Reservas.aspx.cs">
+      <DependentUpon>Reservas.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reservas.aspx.designer.cs">
+      <DependentUpon>Reservas.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -91,6 +98,7 @@
   <ItemGroup>
     <Content Include="Alumnos.aspx" />
     <Content Include="Default.aspx" />
+    <Content Include="Reservas.aspx" />
     <Content Include="Site.Master" />
     <Content Include="Planes.aspx" />
     <Content Include="Web.config" />
