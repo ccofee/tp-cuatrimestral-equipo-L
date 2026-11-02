@@ -71,5 +71,49 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+        public void BajaLogica(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE PLANES SET Activo = 0 WHERE Id = @id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public Plan BuscarPorId(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id, Descripcion, Precio, ClasesSemanales, Activo FROM PLANES WHERE Id = @id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarLectura();
+
+                if (!datos.Lector.Read())
+                    return null;
+
+                Plan plan = new Plan();
+                plan.Id = (int)datos.Lector["Id"];
+                plan.Descripcion = (string)datos.Lector["Descripcion"];
+                plan.Precio = (decimal)datos.Lector["Precio"];
+                plan.ClasesSemanales = (int)datos.Lector["ClasesSemanales"];
+                plan.Activo = (bool)datos.Lector["Activo"];
+
+                return plan;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
     }
 }
