@@ -35,38 +35,79 @@ namespace Presentacion
             }
         }
 
+        protected void dgvAlumnos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+
+                int idSeleccionado = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
+
+                AlumnoNegocio negocio = new AlumnoNegocio();
+                Alumno seleccionado = negocio.listar().Find(a => a.Id == idSeleccionado);
+
+                if (seleccionado != null)
+                {
+                    //precarga de campos textbox
+                    txtDni.Text = seleccionado.DNI;
+                    txtNombre.Text = seleccionado.Nombre;
+                    txtApellido.Text = seleccionado.Apellido;
+                    txtEmail.Text = seleccionado.Email;
+                    txtTelefono.Text = seleccionado.Telefono;
+
+                    if (seleccionado.FechaNacimiento > DateTime.MinValue)
+                        txtFechaNacimiento.Text = seleccionado.FechaNacimiento.ToString("yyyy-MM-dd");
+                    else
+                        txtFechaNacimiento.Text = string.Empty;
+
+                    ddlPlan.SelectedValue = seleccionado.Plan.Id.ToString();
+
+                    //cambio de formato de la fecha
+                    txtFechaVencimiento.Text = seleccionado.FechaVencimientoPlan.ToString("yyyy-MM-dd");
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            Alumno nuevo = new Alumno();
+            Alumno alumno = new Alumno();
             AlumnoNegocio negocio = new AlumnoNegocio();
 
             try
             {
                 //carga de datos
-                nuevo.DNI = txtDni.Text;
-                nuevo.Nombre = txtNombre.Text;
-                nuevo.Apellido = txtApellido.Text;
-                nuevo.Email = txtEmail.Text;
-                nuevo.Telefono = txtTelefono.Text;
+                alumno.DNI = txtDni.Text;
+                alumno.Nombre = txtNombre.Text;
+                alumno.Apellido = txtApellido.Text;
+                alumno.Email = txtEmail.Text;
+                alumno.Telefono = txtTelefono.Text;
 
                 if (!string.IsNullOrEmpty(txtFechaNacimiento.Text))
-                {
-                    nuevo.FechaNacimiento = DateTime.Parse(txtFechaNacimiento.Text);
-                }
+                    alumno.FechaNacimiento = DateTime.Parse(txtFechaNacimiento.Text);
 
-                nuevo.Plan = new Plan();
-                nuevo.Plan.Id = int.Parse(ddlPlan.SelectedValue);
-
+                alumno.Plan = new Plan();
+                alumno.Plan.Id = int.Parse(ddlPlan.SelectedValue);
 
                 if (!string.IsNullOrEmpty(txtFechaVencimiento.Text))
+                    alumno.FechaVencimientoPlan = DateTime.Parse(txtFechaVencimiento.Text);
+
+                //seleccion de ALTA o MODIFICACION
+                if (dgvAlumnos.SelectedIndex != -1)
                 {
-                    nuevo.FechaVencimientoPlan = DateTime.Parse(txtFechaVencimiento.Text);
+                    alumno.Id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
+                    negocio.modificar(alumno);
+                }
+                else
+                {
+                    negocio.agregar(alumno);
                 }
 
-
-                negocio.agregar(nuevo);
-
-                //refresco y limpieza de campos
+                //actualizacion y limpieza de campos
                 cargarGrilla();
                 limpiarCampos();
             }
@@ -75,6 +116,11 @@ namespace Presentacion
                 Session.Add("error", ex.ToString());
                 throw ex;
             }
+        }
+
+        protected void btnCancelar_Click(object sender, EventArgs e)
+        {
+            limpiarCampos();
         }
 
         private void limpiarCampos()
@@ -87,6 +133,9 @@ namespace Presentacion
             txtFechaNacimiento.Text = string.Empty;
             txtFechaVencimiento.Text = string.Empty;
             ddlPlan.SelectedValue = "0";
+
+            //vuelta al estado inicial de la grillla
+            dgvAlumnos.SelectedIndex = -1;
         }
 
 

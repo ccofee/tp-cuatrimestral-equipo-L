@@ -133,6 +133,69 @@ namespace Negocio
 
         }
 
+        public void modificar(Alumno alumno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                string consulta = @"UPDATE ALUMNOS SET 
+                                    IdUsuario = @idUsuario, 
+                                    DNI = @dni, 
+                                    Nombre = @nombre, 
+                                    Apellido = @apellido, 
+                                    Email = @email, 
+                                    Telefono = @telefono, 
+                                    FechaNacimiento = @fechaNacimiento, 
+                                    IdPlan = @idPlan, 
+                                    FechaVencimientoPlan = @fechaVencimientoPlan 
+                                   WHERE Id = @id";
+
+                datos.SetearConsulta(consulta);
+
+                datos.SetearParametro("@id", alumno.Id);
+
+                //FK usuario puede ser NULL
+                if (alumno.Usuario != null && alumno.Usuario.Id > 0)
+                    datos.SetearParametro("@idUsuario", alumno.Usuario.Id);
+                else
+                    datos.SetearParametro("@idUsuario", DBNull.Value);
+
+                //obligatorios
+                datos.SetearParametro("@dni", alumno.DNI);
+                datos.SetearParametro("@nombre", alumno.Nombre);
+                datos.SetearParametro("@apellido", alumno.Apellido);
+                datos.SetearParametro("@idPlan", alumno.Plan.Id);
+                datos.SetearParametro("@fechaVencimientoPlan", alumno.FechaVencimientoPlan);
+
+                //opcionales
+                if (!string.IsNullOrEmpty(alumno.Email))
+                    datos.SetearParametro("@email", alumno.Email);
+                else
+                    datos.SetearParametro("@email", DBNull.Value);
+
+                if (!string.IsNullOrEmpty(alumno.Telefono))
+                    datos.SetearParametro("@telefono", alumno.Telefono);
+                else
+                    datos.SetearParametro("@telefono", DBNull.Value);
+
+                if (alumno.FechaNacimiento > DateTime.MinValue)
+                    datos.SetearParametro("@fechaNacimiento", alumno.FechaNacimiento);
+                else
+                    datos.SetearParametro("@fechaNacimiento", DBNull.Value);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
 
     }
 

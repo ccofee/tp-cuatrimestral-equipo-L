@@ -62,14 +62,18 @@
 
             <div class="mb-3">
                 <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-primary" OnClick="btnGuardar_Click"/>
-                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" />
+                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelar_Click"/>
             </div>
         </div>
 
         <div class="col-md-7">
             <h4>Listado</h4>
-            <asp:GridView ID="dgvAlumnos" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="true">
-            </asp:GridView>
+                <asp:GridView ID="dgvAlumnos" runat="server" CssClass="table table-striped table-hover" 
+                    AutoGenerateColumns="true" 
+                    AutoGenerateSelectButton="True" 
+                    DataKeyNames="Id" 
+                    OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged">
+                </asp:GridView>
         </div>
     </div>
 
