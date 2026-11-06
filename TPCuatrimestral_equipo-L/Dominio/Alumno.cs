@@ -18,7 +18,7 @@ namespace Dominio
         public string Telefono { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public Plan Plan { get; set; }
-        public DateTime? FechaVencimientoPlan { get; set; }
+        public DateTime FechaVencimientoPlan { get; set; }
         public bool Activo { get; set; }
     }
 }

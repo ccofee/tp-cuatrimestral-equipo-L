@@ -76,5 +76,65 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+
+        public void agregar(Alumno nuevo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                string consulta = @"INSERT INTO ALUMNOS (IdUsuario, DNI, Nombre, Apellido, Email, Telefono, 
+                                                        FechaNacimiento, IdPlan, FechaVencimientoPlan, Activo) 
+                                    VALUES (@idUsuario, @dni, @nombre, @apellido, @email, @telefono, 
+                                            @fechaNacimiento, @idPlan, @fechaVencimientoPlan, 1)";
+
+                datos.SetearConsulta(consulta);
+
+                //FK usuario puede ser NULL
+                if (nuevo.Usuario != null && nuevo.Usuario.Id > 0)
+                    datos.SetearParametro("@idUsuario", nuevo.Usuario.Id);
+                else
+                    datos.SetearParametro("@idUsuario", DBNull.Value);
+
+                //campos obligatorios   
+                datos.SetearParametro("@dni", nuevo.DNI);
+                datos.SetearParametro("@nombre", nuevo.Nombre);
+                datos.SetearParametro("@apellido", nuevo.Apellido);
+                datos.SetearParametro("@idPlan", nuevo.Plan.Id);
+                datos.SetearParametro("@fechaVencimientoPlan", nuevo.FechaVencimientoPlan);
+
+                //campos opcionales
+                if (!string.IsNullOrEmpty(nuevo.Email))
+                    datos.SetearParametro("@email", nuevo.Email);
+                else
+                    datos.SetearParametro("@email", DBNull.Value);
+
+                if (!string.IsNullOrEmpty(nuevo.Telefono))
+                    datos.SetearParametro("@telefono", nuevo.Telefono);
+                else
+                    datos.SetearParametro("@telefono", DBNull.Value);
+
+                if (nuevo.FechaNacimiento > DateTime.MinValue)
+                    datos.SetearParametro("@fechaNacimiento", nuevo.FechaNacimiento);
+                else
+                    datos.SetearParametro("@fechaNacimiento", DBNull.Value);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+        }
+
+
     }
+
+
 }
