@@ -47,11 +47,8 @@
 
             <div class="mb-3">
                 <label for="ddlPlan" class="form-label">Plan</label>
-                <asp:DropDownList ID="ddlPlan" runat="server" CssClass="form-select">
-                    <asp:ListItem Text="Seleccione un Plan" Value="0" />
-                    <asp:ListItem Text="Plan 2 dias" Value="1" />
-                    <asp:ListItem Text="Plan 3 dias" Value="2" />
-                    <asp:ListItem Text="Pase Libre" Value="3" />
+                <asp:DropDownList ID="ddlPlan" runat="server" CssClass="form-select" AppendDataBoundItems="true">
+                    <asp:ListItem Text="-- Seleccione un Plan --" Value="0" />
                 </asp:DropDownList>
             </div>
 

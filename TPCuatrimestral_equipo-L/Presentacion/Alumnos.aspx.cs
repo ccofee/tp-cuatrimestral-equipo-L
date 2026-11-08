@@ -17,6 +17,7 @@ namespace Presentacion
             if (!IsPostBack)
             {
                 cargarGrilla();
+                cargarPlanes();
             }
         }
 
@@ -27,6 +28,24 @@ namespace Presentacion
             {
                 dgvAlumnos.DataSource = negocio.listar();
                 dgvAlumnos.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+        private void cargarPlanes()
+        {
+            PlanNegocio negocio = new PlanNegocio();
+
+            try
+            {
+                ddlPlan.DataSource = negocio.Listar();
+                ddlPlan.DataTextField = "Descripcion";
+                ddlPlan.DataValueField = "Id";
+                ddlPlan.DataBind();
             }
             catch (Exception ex)
             {
@@ -59,8 +78,8 @@ namespace Presentacion
                     else
                         txtFechaNacimiento.Text = string.Empty;
 
-                    ddlPlan.SelectedValue = seleccionado.Plan.Id.ToString();
 
+                    ddlPlan.SelectedValue = seleccionado.Plan.Id.ToString();
                     //cambio de formato de la fecha
                     txtFechaVencimiento.Text = seleccionado.FechaVencimientoPlan.ToString("yyyy-MM-dd");
                 }
@@ -90,11 +109,17 @@ namespace Presentacion
                 if (!string.IsNullOrEmpty(txtFechaNacimiento.Text))
                     alumno.FechaNacimiento = DateTime.Parse(txtFechaNacimiento.Text);
 
+                //plan
                 alumno.Plan = new Plan();
                 alumno.Plan.Id = int.Parse(ddlPlan.SelectedValue);
 
+                //se ingresa manual o sino 30 dias por defecto
                 if (!string.IsNullOrEmpty(txtFechaVencimiento.Text))
                     alumno.FechaVencimientoPlan = DateTime.Parse(txtFechaVencimiento.Text);
+                else
+                {
+                    alumno.FechaVencimientoPlan = DateTime.Today.AddDays(30);
+                }
 
                 //seleccion de ALTA o MODIFICACION
                 if (dgvAlumnos.SelectedIndex != -1)
@@ -107,7 +132,7 @@ namespace Presentacion
                     negocio.agregar(alumno);
                 }
 
-                //actualizacion y limpieza de campos
+                //actualizo y limpio campos
                 cargarGrilla();
                 limpiarCampos();
             }
@@ -133,6 +158,9 @@ namespace Presentacion
             txtFechaNacimiento.Text = string.Empty;
             txtFechaVencimiento.Text = string.Empty;
             ddlPlan.SelectedValue = "0";
+
+            if (ddlPlan.Items.Count > 0)
+                ddlPlan.SelectedIndex = 0;
 
             //vuelta al estado inicial de la grillla
             dgvAlumnos.SelectedIndex = -1;
