@@ -217,6 +217,27 @@ namespace Negocio
             }
         }
 
+        public void renovarPlan(int id, DateTime nuevaFechaVencimiento)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE ALUMNOS SET FechaVencimientoPlan = @nuevaFecha WHERE Id = @id");
+                datos.SetearParametro("@nuevaFecha", nuevaFechaVencimiento);
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
 
     }
 

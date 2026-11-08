@@ -114,6 +114,15 @@ namespace Presentacion
         protected global::System.Web.UI.WebControls.Button btnEliminar;
 
         /// <summary>
+        /// Control btnRenovar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRenovar;
+
+        /// <summary>
         /// Control dgvAlumnos.
         /// </summary>
         /// <remarks>
