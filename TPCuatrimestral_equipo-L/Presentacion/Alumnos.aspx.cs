@@ -139,5 +139,28 @@ namespace Presentacion
         }
 
 
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            AlumnoNegocio negocio = new AlumnoNegocio();
+
+            try
+            {
+                if (dgvAlumnos.SelectedIndex != -1)
+                {
+                    int id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
+                    negocio.eliminarLogico(id);
+
+                    cargarGrilla();
+                    limpiarCampos();
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+
     }
 }
