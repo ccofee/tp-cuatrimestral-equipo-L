@@ -94,11 +94,16 @@ namespace Presentacion
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            Alumno alumno = new Alumno();
-            AlumnoNegocio negocio = new AlumnoNegocio();
 
             try
             {
+                Page.Validate();
+                if (!Page.IsValid)
+                    return;
+
+                Alumno alumno = new Alumno();
+                AlumnoNegocio negocio = new AlumnoNegocio();
+
                 //carga de datos
                 alumno.DNI = txtDni.Text;
                 alumno.Nombre = txtNombre.Text;
@@ -117,9 +122,7 @@ namespace Presentacion
                 if (!string.IsNullOrEmpty(txtFechaVencimiento.Text))
                     alumno.FechaVencimientoPlan = DateTime.Parse(txtFechaVencimiento.Text);
                 else
-                {
                     alumno.FechaVencimientoPlan = DateTime.Today.AddDays(30);
-                }
 
                 //seleccion de ALTA o MODIFICACION
                 if (dgvAlumnos.SelectedIndex != -1)
