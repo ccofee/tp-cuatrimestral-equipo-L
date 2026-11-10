@@ -26,10 +26,11 @@
             <div class="mb-3">
                 <label for="txtDni" class="form-label">DNI</label>
                 <asp:TextBox ID="txtDni" runat="server" CssClass="form-control"></asp:TextBox>
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server"
+                <asp:RequiredFieldValidator runat="server"
                     ControlToValidate="txtDni" ErrorMessage="El DNI es requerido" CssClass="validacion"></asp:RequiredFieldValidator>
-                <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server"
+                <asp:RegularExpressionValidator runat="server"
                     ControlToValidate="txtDni" ErrorMessage="Solo números" ValidationExpression="^[0-9]+$" CssClass="validacion"></asp:RegularExpressionValidator>
+                <asp:Label ID="lblErrorDni" runat="server" CssClass="validacion" Visible="false"></asp:Label>
             </div>
 
             <div class="row">
@@ -37,24 +38,21 @@
                 <div class="col-md-6 mb-3">
                     <label for="txtNombre" class="form-label">Nombre</label>
                     <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server"
-                        ControlToValidate="txtNombre" ErrorMessage="El nombre es requerido" CssClass="validacion"></asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre" ErrorMessage="El nombre es requerido" CssClass="validacion"></asp:RequiredFieldValidator>
                 </div>
                 <!-- apellido obligatorio -->
                 <div class="col-md-6 mb-3">
                     <label for="txtApellido" class="form-label">Apellido</label>
                     <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidator3" runat="server"
-                        ControlToValidate="txtApellido" ErrorMessage="El apellido es requerido" CssClass="validacion"></asp:RequiredFieldValidator>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtApellido" ErrorMessage="El apellido es requerido" CssClass="validacion"></asp:RequiredFieldValidator>
                 </div>
             </div>
             <!-- email con validator -->
             <div class="mb-3">
                 <label for="txtEmail" class="form-label">Email</label>
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control"></asp:TextBox>
-                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server"
-                    ControlToValidate="txtEmail" ErrorMessage="Formato email, por favor"
-                    ValidationExpression="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" CssClass="validacion"></asp:RegularExpressionValidator>
+                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtEmail" ErrorMessage="Formato email, por favor" 
+                     ValidationExpression="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" CssClass="validacion"></asp:RegularExpressionValidator>
             </div>
             <!-- telefono -->
             <div class="mb-3">
@@ -72,7 +70,7 @@
                 <asp:DropDownList ID="ddlPlan" runat="server" CssClass="form-select" AppendDataBoundItems="true">
                     <asp:ListItem Text="-- Seleccione un Plan --" Value="0" />
                 </asp:DropDownList>
-                <asp:RequiredFieldValidator ID="RequiredFieldValidator4" runat="server"
+                <asp:RequiredFieldValidator runat="server"
                     ControlToValidate="ddlPlan" InitialValue="0" ErrorMessage="Debe seleccionar un plan" CssClass="validacion"></asp:RequiredFieldValidator>
             </div>
             <!-- fecha vencimiento -->

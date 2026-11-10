@@ -238,6 +238,32 @@ namespace Negocio
             }
         }
 
+        public bool existeDni(string dni)
+        {
+
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM ALUMNOS WHERE DNI = @dni");
+                datos.SetearParametro("@dni", dni);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
 
     }
 

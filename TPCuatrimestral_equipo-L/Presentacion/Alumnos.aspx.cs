@@ -97,6 +97,8 @@ namespace Presentacion
 
             try
             {
+                lblErrorDni.Visible = false;
+
                 Page.Validate();
                 if (!Page.IsValid)
                     return;
@@ -124,21 +126,30 @@ namespace Presentacion
                 else
                     alumno.FechaVencimientoPlan = DateTime.Today.AddDays(30);
 
-                //seleccion de ALTA o MODIFICACION
-                if (dgvAlumnos.SelectedIndex != -1)
+                //seleccion de ALTA o MODIFICACION + control de DNI repetido
+                if (dgvAlumnos.SelectedIndex == -1)
                 {
-                    alumno.Id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
-                    negocio.modificar(alumno);
+                    //control DNI
+                    if (negocio.existeDni(alumno.DNI))
+                    {
+                        lblErrorDni.Text = "El DNI ingresado ya se encuentra registrado.";
+                        lblErrorDni.Visible = true;
+                        return;
+                    }
+
+                    negocio.agregar(alumno);
                 }
                 else
                 {
-                    negocio.agregar(alumno);
+                    alumno.Id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
+                    negocio.modificar(alumno);    
                 }
 
-                //actualizo y limpio campos
-                cargarGrilla();
-                limpiarCampos();
-            }
+                 //actualizo y limpio campos
+                 cargarGrilla();
+                 limpiarCampos();
+
+             }
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
@@ -160,10 +171,13 @@ namespace Presentacion
             txtTelefono.Text = string.Empty;
             txtFechaNacimiento.Text = string.Empty;
             txtFechaVencimiento.Text = string.Empty;
-            ddlPlan.SelectedValue = "0";
 
             if (ddlPlan.Items.Count > 0)
                 ddlPlan.SelectedIndex = 0;
+
+            //limpieza de DNI
+            lblErrorDni.Text = string.Empty;
+            lblErrorDni.Visible = false;
 
             //vuelta al estado inicial de la grillla
             dgvAlumnos.SelectedIndex = -1;
