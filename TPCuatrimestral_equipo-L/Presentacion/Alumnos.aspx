@@ -90,10 +90,20 @@
         <div class="col-md-7">
             <h4>Listado</h4>
             <asp:GridView ID="dgvAlumnos" runat="server" CssClass="table table-striped table-hover"
-                AutoGenerateColumns="true"
+                AutoGenerateColumns="False"
                 AutoGenerateSelectButton="True"
                 DataKeyNames="Id"
                 OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged">
+                <Columns>
+                    <asp:BoundField DataField="DNI" HeaderText="DNI" />
+                    <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                    <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+                    <asp:BoundField DataField="Email" HeaderText="Email" />
+                    <asp:BoundField DataField="Telefono" HeaderText="Teléfono" />
+                    <asp:BoundField DataField="FechaNacimiento" HeaderText="Fecha de Nacimiento" DataFormatString="{0:dd/MM/yyyy}" />
+                    <asp:BoundField DataField="Plan.Descripcion" HeaderText="Plan" />
+                    <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento del Plan" DataFormatString="{0:dd/MM/yyyy}" />
+                </Columns>
             </asp:GridView>
         </div>
     </div>
