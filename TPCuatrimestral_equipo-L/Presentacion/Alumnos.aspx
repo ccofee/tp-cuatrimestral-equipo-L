@@ -51,8 +51,8 @@
             <div class="mb-3">
                 <label for="txtEmail" class="form-label">Email</label>
                 <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control"></asp:TextBox>
-                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtEmail" ErrorMessage="Formato email, por favor" 
-                     ValidationExpression="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" CssClass="validacion"></asp:RegularExpressionValidator>
+                <asp:RegularExpressionValidator runat="server" ControlToValidate="txtEmail" ErrorMessage="Formato email, por favor"
+                    ValidationExpression="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" CssClass="validacion"></asp:RegularExpressionValidator>
             </div>
             <!-- telefono -->
             <div class="mb-3">
@@ -89,6 +89,13 @@
 
         <div class="col-md-7">
             <h4>Listado</h4>
+
+            <div class="mb-3">
+                <label for="txtFiltro" class="form-label">Filtrar</label>
+                <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control"
+                    AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
+            </div>
+
             <asp:GridView ID="dgvAlumnos" runat="server" CssClass="table table-striped table-hover"
                 AutoGenerateColumns="False"
                 AutoGenerateSelectButton="True"

@@ -26,7 +26,9 @@ namespace Presentacion
             AlumnoNegocio negocio = new AlumnoNegocio();
             try
             {
-                dgvAlumnos.DataSource = negocio.listar();
+                List<Alumno> lista = negocio.listar();
+                Session.Add("listaAlumnos", lista);
+                dgvAlumnos.DataSource = lista;
                 dgvAlumnos.DataBind();
             }
             catch (Exception ex)
@@ -83,6 +85,30 @@ namespace Presentacion
                     //cambio de formato de la fecha
                     txtFechaVencimiento.Text = seleccionado.FechaVencimientoPlan.ToString("yyyy-MM-dd");
                 }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                List<Alumno> lista = (List<Alumno>)Session["listaAlumnos"];
+
+                List<Alumno> listaFiltrada = lista.FindAll(x =>
+                    x.DNI.ToUpper().Contains(txtFiltro.Text.ToUpper()) ||
+                    x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()) ||
+                    x.Apellido.ToUpper().Contains(txtFiltro.Text.ToUpper())
+                );
+
+                //desmarco si habia algun alumno seleccionado
+                dgvAlumnos.SelectedIndex = -1;
+                dgvAlumnos.DataSource = listaFiltrada;
+                dgvAlumnos.DataBind();
             }
             catch (Exception ex)
             {
@@ -160,6 +186,8 @@ namespace Presentacion
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             limpiarCampos();
+            dgvAlumnos.DataSource = (List<Alumno>)Session["listaAlumnos"];
+            dgvAlumnos.DataBind();
         }
 
         private void limpiarCampos()
@@ -171,6 +199,7 @@ namespace Presentacion
             txtTelefono.Text = string.Empty;
             txtFechaNacimiento.Text = string.Empty;
             txtFechaVencimiento.Text = string.Empty;
+            txtFiltro.Text = string.Empty;
 
             if (ddlPlan.Items.Count > 0)
                 ddlPlan.SelectedIndex = 0;
