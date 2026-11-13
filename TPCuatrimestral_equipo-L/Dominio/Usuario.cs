@@ -12,9 +12,14 @@ namespace Dominio
         public int Id { get; set; }
         public string Email { get; set; }
         public string Clave { get; set; }
-        public string Rol { get; set; }
+        public int Rol { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public bool Activo { get; set; }
+
+        public string RolDescripcion
+        {
+            get { return Rol == 1 ? "Administrador" : "Alumno"; }
+        }
     }
 }
