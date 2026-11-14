@@ -22,6 +22,32 @@ namespace Dominio
         public DateTime FechaAlta { get; set; }
         public bool Activo { get; set; }
 
+        //calcula si el alumno esta atrasado en el pago del plan
+        public bool Atrasado
+        {
+            get { return FechaVencimientoPlan.Date < DateTime.Today; }
+        }
+
+        //calcula la antiguedad del alumno en meses desde FechaAlta
+        public string Antiguedad
+        {
+            get
+            {
+                int meses = ((DateTime.Today.Year - FechaAlta.Year) * 12) + DateTime.Today.Month - FechaAlta.Month;
+
+                if (DateTime.Today.Day < FechaAlta.Day)
+                    meses--;
+
+                if (meses <= 0)
+                    return "< de 1 mes";
+                if (meses == 1)
+                    return "1 mes";
+
+                return meses + " meses";
+            }
+        }
+
+
         public override string ToString()
         {
             return Apellido + ", " + Nombre;

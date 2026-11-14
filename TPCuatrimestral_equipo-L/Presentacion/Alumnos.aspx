@@ -19,6 +19,33 @@
                 color: red;
                 font-size: 12px;
             }
+
+            .chk-atrasado input[type="checkbox"] {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 17px;
+                height: 17px;
+                border: 2px solid #6c757d;
+                border-radius: 3px;
+                background-color: #ffffff;
+                vertical-align: middle;
+                position: relative;
+            }
+
+             .chk-atrasado input[type="checkbox"]:checked {
+                 background-color: #dc3545;
+                 border-color: #dc3545;
+             }
+
+             .chk-atrasado input[type="checkbox"]:checked::after {
+                 content: "✓";
+                 color: #ffffff;
+                 font-size: 13px;
+                 font-weight: bold;
+                 position: absolute;
+                 top: -3px;
+                 left: 2px;
+              }
         </style>
 
         <div class="col-md-5">
@@ -110,6 +137,8 @@
                     <asp:BoundField DataField="FechaNacimiento" HeaderText="Fecha de Nacimiento" DataFormatString="{0:dd/MM/yyyy}" />
                     <asp:BoundField DataField="Plan.Descripcion" HeaderText="Plan" />
                     <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento del Plan" DataFormatString="{0:dd/MM/yyyy}" />
+                    <asp:BoundField HeaderText="Antigüedad" DataField="Antiguedad" />
+                    <asp:CheckBoxField HeaderText="Atrasado" DataField="Atrasado" ItemStyle-CssClass="chk-atrasado text-center" />
                 </Columns>
             </asp:GridView>
         </div>
