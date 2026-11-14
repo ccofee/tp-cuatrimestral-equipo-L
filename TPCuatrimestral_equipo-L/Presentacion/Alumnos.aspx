@@ -83,7 +83,7 @@
                 <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-primary" OnClick="btnGuardar_Click" />
                 <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" CausesValidation="false" OnClick="btnCancelar_Click" />
                 <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-danger" CausesValidation="false" OnClick="btnEliminar_Click" />
-                <asp:Button ID="btnRenovar" runat="server" Text="Renovar Plan" CssClass="btn btn-success" CausesValidation="false" OnClick="btnRenovar_Click" />
+                <asp:Button ID="btnRenovar" runat="server" Text="Registrar Pago" CssClass="btn btn-success" CausesValidation="false" OnClick="btnRenovar_Click" />
             </div>
         </div>
 

@@ -244,20 +244,16 @@ namespace Presentacion
                 {
                     int idSeleccionado = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
 
-                    AlumnoNegocio negocio = new AlumnoNegocio();
-                    Alumno seleccionado = negocio.listar().Find(a => a.Id == idSeleccionado);
+                    AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+                    Alumno seleccionado = alumnoNegocio.listar().Find(a => a.Id == idSeleccionado);
 
                     if (seleccionado != null)
                     {
-                        DateTime nuevoVencimiento;
+                        Pago nuevoPago = new Pago();
+                        nuevoPago.Alumno = seleccionado;
 
-                        //si vencio sumamos 30 dias desde hoy, si no vencio se suman 30 a la fecha de vencimiento actual
-                        if (seleccionado.FechaVencimientoPlan > DateTime.Today)
-                            nuevoVencimiento = seleccionado.FechaVencimientoPlan.AddDays(30);
-                        else
-                            nuevoVencimiento = DateTime.Today.AddDays(30);
-
-                        negocio.renovarPlan(idSeleccionado, nuevoVencimiento);
+                        PagoNegocio pagoNegocio = new PagoNegocio();
+                        pagoNegocio.registrar(nuevoPago);
 
                         cargarGrilla();
                         limpiarCampos();
