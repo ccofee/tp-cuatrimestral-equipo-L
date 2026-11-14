@@ -264,6 +264,72 @@ namespace Negocio
         }
 
 
+        public Alumno buscarPorIdUsuario(int idUsuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                string consulta = @"SELECT A.Id, A.IdUsuario, A.DNI, A.Nombre, A.Apellido, A.Email, A.Telefono, 
+                                            A.FechaNacimiento, A.IdPlan, P.Descripcion AS NombrePlan, P.Precio, 
+                                            P.ClasesSemanales, A.FechaVencimientoPlan, A.Activo 
+                                    FROM ALUMNOS A 
+                                    INNER JOIN PLANES P ON A.IdPlan = P.Id 
+                                    WHERE A.IdUsuario = @idUsuario AND A.Activo = 1";
+
+                datos.SetearConsulta(consulta);
+                datos.SetearParametro("@idUsuario", idUsuario);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    Alumno aux = new Alumno();
+
+                    //obligatorias 
+                    aux.Id = (int)datos.Lector["Id"];
+                    aux.DNI = (string)datos.Lector["DNI"];
+                    aux.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Apellido = (string)datos.Lector["Apellido"];
+                    aux.FechaVencimientoPlan = (DateTime)datos.Lector["FechaVencimientoPlan"];
+                    aux.Activo = (bool)datos.Lector["Activo"];
+
+                    //nulleables
+                    if (!(datos.Lector["Email"] is DBNull))
+                        aux.Email = (string)datos.Lector["Email"];
+
+                    if (!(datos.Lector["Telefono"] is DBNull))
+                        aux.Telefono = (string)datos.Lector["Telefono"];
+
+                    if (!(datos.Lector["FechaNacimiento"] is DBNull))
+                        aux.FechaNacimiento = (DateTime)datos.Lector["FechaNacimiento"];
+
+                    //usuario
+                    aux.Usuario = new Usuario();
+                    aux.Usuario.Id = (int)datos.Lector["IdUsuario"];
+
+                    //planb
+                    aux.Plan = new Plan();
+                    aux.Plan.Id = (int)datos.Lector["IdPlan"];
+                    aux.Plan.Descripcion = (string)datos.Lector["NombrePlan"];
+                    aux.Plan.Precio = (decimal)datos.Lector["Precio"];
+                    aux.Plan.ClasesSemanales = (int)datos.Lector["ClasesSemanales"];
+
+                    return aux;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
 
     }
 
