@@ -16,10 +16,10 @@ namespace Negocio
 
             try
             {
-                //cambie a inner, habia quedado mal de una prueba anterior
+                
                 string consulta = @"SELECT A.Id, A.IdUsuario, A.DNI, A.Nombre, A.Apellido, A.Email, A.Telefono, 
                                            A.FechaNacimiento, A.IdPlan, P.Descripcion AS NombrePlan, P.Precio, 
-                                           P.ClasesSemanales, A.FechaVencimientoPlan, A.Activo 
+                                           P.ClasesSemanales, A.FechaVencimientoPlan, A.FechaAlta, A.Activo 
                                     FROM ALUMNOS A 
                                     INNER JOIN PLANES P ON A.IdPlan = P.Id 
                                     WHERE A.Activo = 1";
@@ -37,6 +37,7 @@ namespace Negocio
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Apellido = (string)datos.Lector["Apellido"];
                     aux.FechaVencimientoPlan = (DateTime)datos.Lector["FechaVencimientoPlan"];
+                    aux.FechaAlta = (DateTime)datos.Lector["FechaAlta"];
                     aux.Activo = (bool)datos.Lector["Activo"];
 
                     if (!(datos.Lector["Email"] is DBNull))
@@ -272,7 +273,7 @@ namespace Negocio
             {
                 string consulta = @"SELECT A.Id, A.IdUsuario, A.DNI, A.Nombre, A.Apellido, A.Email, A.Telefono, 
                                             A.FechaNacimiento, A.IdPlan, P.Descripcion AS NombrePlan, P.Precio, 
-                                            P.ClasesSemanales, A.FechaVencimientoPlan, A.Activo 
+                                            P.ClasesSemanales, A.FechaVencimientoPlan, A.FechaAlta , A.Activo 
                                     FROM ALUMNOS A 
                                     INNER JOIN PLANES P ON A.IdPlan = P.Id 
                                     WHERE A.IdUsuario = @idUsuario AND A.Activo = 1";
@@ -291,6 +292,7 @@ namespace Negocio
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Apellido = (string)datos.Lector["Apellido"];
                     aux.FechaVencimientoPlan = (DateTime)datos.Lector["FechaVencimientoPlan"];
+                    aux.FechaAlta = (DateTime)datos.Lector["FechaAlta"];
                     aux.Activo = (bool)datos.Lector["Activo"];
 
                     //nulleables
