@@ -138,6 +138,36 @@ namespace Negocio
             }
         }
 
+        public Usuario BuscarPorEmail(string email)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id, Email, Clave, Rol, Nombre, Apellido, Activo FROM USUARIOS WHERE Email = @email AND Activo = 1");
+                datos.SetearParametro("@email", email);
+                datos.EjecutarLectura();
+
+                if (!datos.Lector.Read())
+                    return null;
+
+                Usuario usuario = new Usuario();
+                usuario.Id = (int)datos.Lector["Id"];
+                usuario.Email = (string)datos.Lector["Email"];
+                usuario.Clave = (string)datos.Lector["Clave"];
+                usuario.Rol = (int)datos.Lector["Rol"];
+                usuario.Nombre = (string)datos.Lector["Nombre"];
+                usuario.Apellido = (string)datos.Lector["Apellido"];
+                usuario.Activo = (bool)datos.Lector["Activo"];
+
+                return usuario;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
         public bool ExisteEmail(string email)
         {
             AccesoDatos datos = new AccesoDatos();

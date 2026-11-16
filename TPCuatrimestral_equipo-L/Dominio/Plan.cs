@@ -12,6 +12,8 @@ namespace Dominio
         public string Descripcion { get; set; }
         public decimal Precio { get; set; }
         public int ClasesSemanales { get; set; }
+        public bool IncluyeMusculacion { get; set; }
+        public bool IncluyeClases { get; set; }
         public bool Activo { get; set; }
 
         public override string ToString()

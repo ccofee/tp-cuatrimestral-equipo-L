@@ -20,6 +20,11 @@
                 font-size: 12px;
             }
 
+            .table-responsive table th,
+            .table-responsive table td {
+                white-space: nowrap;
+            }
+
             .chk-atrasado input[type="checkbox"] {
                 -webkit-appearance: none;
                 appearance: none;
@@ -123,24 +128,26 @@
                     AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
             </div>
 
-            <asp:GridView ID="dgvAlumnos" runat="server" CssClass="table table-striped table-hover"
-                AutoGenerateColumns="False"
-                AutoGenerateSelectButton="True"
-                DataKeyNames="Id"
-                OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged">
-                <Columns>
-                    <asp:BoundField DataField="DNI" HeaderText="DNI" />
-                    <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                    <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
-                    <asp:BoundField DataField="Email" HeaderText="Email" />
-                    <asp:BoundField DataField="Telefono" HeaderText="Teléfono" />
-                    <asp:BoundField DataField="FechaNacimiento" HeaderText="Fecha de Nacimiento" DataFormatString="{0:dd/MM/yyyy}" />
-                    <asp:BoundField DataField="Plan.Descripcion" HeaderText="Plan" />
-                    <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento del Plan" DataFormatString="{0:dd/MM/yyyy}" />
-                    <asp:BoundField HeaderText="Antigüedad" DataField="Antiguedad" />
-                    <asp:CheckBoxField HeaderText="Atrasado" DataField="Atrasado" ItemStyle-CssClass="chk-atrasado text-center" />
-                </Columns>
-            </asp:GridView>
+            <div class="table-responsive">
+                <asp:GridView ID="dgvAlumnos" runat="server" CssClass="table table-striped table-hover"
+                    AutoGenerateColumns="False"
+                    AutoGenerateSelectButton="True"
+                    DataKeyNames="Id"
+                    OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged">
+                    <Columns>
+                        <asp:BoundField DataField="DNI" HeaderText="DNI" />
+                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
+                        <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
+                        <asp:BoundField DataField="Email" HeaderText="Email" />
+                        <asp:BoundField DataField="Telefono" HeaderText="Teléfono" />
+                        <asp:BoundField DataField="FechaNacimiento" HeaderText="Fecha de Nacimiento" DataFormatString="{0:dd/MM/yyyy}" />
+                        <asp:BoundField DataField="Plan.Descripcion" HeaderText="Plan" />
+                        <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento del Plan" DataFormatString="{0:dd/MM/yyyy}" />
+                        <asp:BoundField HeaderText="Antigüedad" DataField="Antiguedad" />
+                        <asp:CheckBoxField HeaderText="Atrasado" DataField="Atrasado" ItemStyle-CssClass="chk-atrasado text-center" />
+                    </Columns>
+                </asp:GridView>
+            </div>
         </div>
     </div>
 
