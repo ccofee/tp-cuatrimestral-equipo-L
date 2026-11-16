@@ -29,7 +29,8 @@
                         <asp:PlaceHolder ID="phLogueado" runat="server" Visible="false">
                             <li class="nav-item nav-link text-white-50">Hola, <asp:Literal ID="litNombreUsuario" runat="server" /></li>
                             <li class="nav-item">
-                                <asp:LinkButton ID="btnCerrarSesion" runat="server" CssClass="nav-link" Text="Cerrar sesión" OnClick="btnCerrarSesion_Click" />
+                                <asp:LinkButton ID="btnCerrarSesion" runat="server" CssClass="nav-link" Text="Cerrar sesión" CausesValidation="false"
+                                    OnClientClick="return confirm('¿Seguro que querés cerrar sesión?');" OnClick="btnCerrarSesion_Click" />
                             </li>
                         </asp:PlaceHolder>
                         <asp:PlaceHolder ID="phNoLogueado" runat="server" Visible="false">

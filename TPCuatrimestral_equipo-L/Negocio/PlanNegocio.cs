@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Dominio;
 
 namespace Negocio
@@ -12,7 +13,7 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("SELECT Id, Descripcion, Precio, ClasesSemanales, Activo FROM PLANES WHERE Activo = 1");
+                datos.SetearConsulta("SELECT Id, Descripcion, Precio, ClasesSemanales, IncluyeMusculacion, IncluyeClases, Activo FROM PLANES WHERE Activo = 1");
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -22,6 +23,8 @@ namespace Negocio
                     plan.Descripcion = (string)datos.Lector["Descripcion"];
                     plan.Precio = (decimal)datos.Lector["Precio"];
                     plan.ClasesSemanales = (int)datos.Lector["ClasesSemanales"];
+                    plan.IncluyeMusculacion = (bool)datos.Lector["IncluyeMusculacion"];
+                    plan.IncluyeClases = (bool)datos.Lector["IncluyeClases"];
                     plan.Activo = (bool)datos.Lector["Activo"];
 
                     lista.Add(plan);
@@ -37,14 +40,19 @@ namespace Negocio
 
         public void Agregar(Plan nuevo)
         {
+            if (!nuevo.IncluyeMusculacion && !nuevo.IncluyeClases)
+                throw new Exception("El plan debe incluir al menos musculación o clases grupales.");
+
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta("INSERT INTO PLANES (Descripcion, Precio, ClasesSemanales) VALUES (@descripcion, @precio, @clasesSemanales)");
+                datos.SetearConsulta("INSERT INTO PLANES (Descripcion, Precio, ClasesSemanales, IncluyeMusculacion, IncluyeClases) VALUES (@descripcion, @precio, @clasesSemanales, @incluyeMusculacion, @incluyeClases)");
                 datos.SetearParametro("@descripcion", nuevo.Descripcion);
                 datos.SetearParametro("@precio", nuevo.Precio);
                 datos.SetearParametro("@clasesSemanales", nuevo.ClasesSemanales);
+                datos.SetearParametro("@incluyeMusculacion", nuevo.IncluyeMusculacion);
+                datos.SetearParametro("@incluyeClases", nuevo.IncluyeClases);
                 datos.EjecutarAccion();
             }
             finally
@@ -55,14 +63,19 @@ namespace Negocio
 
         public void Modificar(Plan plan)
         {
+            if (!plan.IncluyeMusculacion && !plan.IncluyeClases)
+                throw new Exception("El plan debe incluir al menos musculación o clases grupales.");
+
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta("UPDATE PLANES SET Descripcion = @descripcion, Precio = @precio, ClasesSemanales = @clasesSemanales WHERE Id = @id");
+                datos.SetearConsulta("UPDATE PLANES SET Descripcion = @descripcion, Precio = @precio, ClasesSemanales = @clasesSemanales, IncluyeMusculacion = @incluyeMusculacion, IncluyeClases = @incluyeClases WHERE Id = @id");
                 datos.SetearParametro("@descripcion", plan.Descripcion);
                 datos.SetearParametro("@precio", plan.Precio);
                 datos.SetearParametro("@clasesSemanales", plan.ClasesSemanales);
+                datos.SetearParametro("@incluyeMusculacion", plan.IncluyeMusculacion);
+                datos.SetearParametro("@incluyeClases", plan.IncluyeClases);
                 datos.SetearParametro("@id", plan.Id);
                 datos.EjecutarAccion();
             }
@@ -94,7 +107,7 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("SELECT Id, Descripcion, Precio, ClasesSemanales, Activo FROM PLANES WHERE Id = @id");
+                datos.SetearConsulta("SELECT Id, Descripcion, Precio, ClasesSemanales, IncluyeMusculacion, IncluyeClases, Activo FROM PLANES WHERE Id = @id");
                 datos.SetearParametro("@id", id);
                 datos.EjecutarLectura();
 
@@ -106,6 +119,8 @@ namespace Negocio
                 plan.Descripcion = (string)datos.Lector["Descripcion"];
                 plan.Precio = (decimal)datos.Lector["Precio"];
                 plan.ClasesSemanales = (int)datos.Lector["ClasesSemanales"];
+                plan.IncluyeMusculacion = (bool)datos.Lector["IncluyeMusculacion"];
+                plan.IncluyeClases = (bool)datos.Lector["IncluyeClases"];
                 plan.Activo = (bool)datos.Lector["Activo"];
 
                 return plan;

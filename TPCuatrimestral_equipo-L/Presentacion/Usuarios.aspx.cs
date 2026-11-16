@@ -10,6 +10,20 @@ namespace Presentacion
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            if (usuarioLogueado.Rol != 1)
+            {
+                Response.Redirect("Default.aspx");
+                return;
+            }
+
             if (!IsPostBack)
                 CargarGrilla();
         }
