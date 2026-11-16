@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.UI;
+using Dominio;
 
 namespace Presentacion
 {
@@ -7,6 +8,23 @@ namespace Presentacion
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado != null)
+            {
+                phLogueado.Visible = true;
+                litNombreUsuario.Text = usuarioLogueado.Nombre;
+            }
+            else
+            {
+                phNoLogueado.Visible = true;
+            }
+        }
+
+        protected void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("Login.aspx");
         }
     }
 }

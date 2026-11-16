@@ -25,6 +25,17 @@
                         <li class="nav-item"><a class="nav-link" href="Horarios.aspx">Horarios</a></li>
                         <li class="nav-item"><a class="nav-link" href="Reservas.aspx">Reservas</a></li>
                     </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <asp:PlaceHolder ID="phLogueado" runat="server" Visible="false">
+                            <li class="nav-item nav-link text-white-50">Hola, <asp:Literal ID="litNombreUsuario" runat="server" /></li>
+                            <li class="nav-item">
+                                <asp:LinkButton ID="btnCerrarSesion" runat="server" CssClass="nav-link" Text="Cerrar sesión" OnClick="btnCerrarSesion_Click" />
+                            </li>
+                        </asp:PlaceHolder>
+                        <asp:PlaceHolder ID="phNoLogueado" runat="server" Visible="false">
+                            <li class="nav-item"><a class="nav-link" href="Login.aspx">Iniciar sesión</a></li>
+                        </asp:PlaceHolder>
+                    </ul>
                 </div>
             </div>
         </nav>
