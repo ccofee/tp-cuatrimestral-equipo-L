@@ -47,6 +47,7 @@ namespace Negocio
             }
         }
 
+
         public void agregar(Actividad nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -73,5 +74,119 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+
+
+        public void modificar(Actividad actividad)
+        {
+
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE ACTIVIDADES SET Nombre = @nombre, Descripcion = @descripcion WHERE Id = @id");
+                datos.SetearParametro("@nombre", actividad.Nombre);
+
+                if (!string.IsNullOrEmpty(actividad.Descripcion))
+                    datos.SetearParametro("@descripcion", actividad.Descripcion);
+                else
+                    datos.SetearParametro("@descripcion", DBNull.Value);
+
+                datos.SetearParametro("@id", actividad.Id);
+
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        public void eliminarLogico(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE ACTIVIDADES SET Activo = 0 WHERE Id = @id");
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        //para el ALTA
+        public bool existeNombre(string nombre)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM ACTIVIDADES WHERE Nombre = @nombre AND Activo = 1");
+                datos.SetearParametro("@nombre", nombre);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        //para la MODIFICACION
+        public bool existeNombre(string nombre, int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM ACTIVIDADES WHERE Nombre = @nombre AND Activo = 1 AND Id != @id");
+                datos.SetearParametro("@nombre", nombre);
+                datos.SetearParametro("@id", id);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+
+
+
+
+
+
     }
 }
