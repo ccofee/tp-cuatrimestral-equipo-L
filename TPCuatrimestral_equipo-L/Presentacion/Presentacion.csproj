@@ -51,6 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actividades.aspx.cs">
+      <DependentUpon>Actividades.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Actividades.aspx.designer.cs">
+      <DependentUpon>Actividades.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Alumnos.aspx.cs">
       <DependentUpon>Alumnos.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -110,6 +117,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Actividades.aspx" />
     <Content Include="Alumnos.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Reservas.aspx" />
