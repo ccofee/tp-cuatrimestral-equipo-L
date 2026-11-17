@@ -17,7 +17,13 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("SELECT Id, DiaSemana, HoraInicio, HoraFin, CupoMaximo, Activo FROM HORARIOS WHERE Activo = 1 ORDER BY DiaSemana, HoraInicio");
+                datos.SetearConsulta(@"SELECT H.Id, H.DiaSemana, H.HoraInicio, H.HoraFin,
+                             H.CupoMaximo, H.IdActividad,
+                             A.Nombre AS ActividadNombre, H.Activo
+                      FROM HORARIOS H
+                      INNER JOIN ACTIVIDADES A ON H.IdActividad = A.Id
+                      WHERE H.Activo = 1
+                      ORDER BY H.DiaSemana, H.HoraInicio");
                 datos.EjecutarLectura();
 
                 while (datos.Lector.Read())
@@ -29,6 +35,9 @@ namespace Negocio
                     horario.HoraInicio = (System.TimeSpan)datos.Lector["HoraInicio"];
                     horario.HoraFin = (System.TimeSpan)datos.Lector["HoraFin"];
                     horario.CupoMaximo = (int)datos.Lector["CupoMaximo"];
+                    horario.Actividad = new Actividad();
+                    horario.Actividad.Id = (int)datos.Lector["IdActividad"];
+                    horario.Actividad.Nombre = (string)datos.Lector["ActividadNombre"];
                     horario.Activo = (bool)datos.Lector["Activo"];
 
                     lista.Add(horario);
@@ -48,11 +57,15 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("INSERT INTO HORARIOS (DiaSemana, HoraInicio, HoraFin, CupoMaximo) VALUES (@diaSemana, @horaInicio, @horaFin, @cupoMaximo)");
+                datos.SetearConsulta(@"INSERT INTO HORARIOS 
+                      (DiaSemana, HoraInicio, HoraFin, CupoMaximo, IdActividad)
+                      VALUES 
+                      (@diaSemana, @horaInicio, @horaFin, @cupoMaximo, @idActividad)");
                 datos.SetearParametro("@diaSemana", nuevo.DiaSemana);
                 datos.SetearParametro("@horaInicio", nuevo.HoraInicio);
                 datos.SetearParametro("@horaFin", nuevo.HoraFin);
                 datos.SetearParametro("@cupoMaximo", nuevo.CupoMaximo);
+                datos.SetearParametro("@idActividad", nuevo.Actividad.Id);
                 datos.EjecutarAccion();
             }
             finally
@@ -67,11 +80,18 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("UPDATE HORARIOS SET DiaSemana = @diaSemana, HoraInicio = @horaInicio, HoraFin = @horaFin, CupoMaximo = @cupoMaximo WHERE Id = @id");
+                datos.SetearConsulta(@"UPDATE HORARIOS SET 
+                      DiaSemana = @diaSemana, 
+                      HoraInicio = @horaInicio, 
+                      HoraFin = @horaFin, 
+                      CupoMaximo = @cupoMaximo,
+                      IdActividad = @idActividad
+                      WHERE Id = @id");
                 datos.SetearParametro("@diaSemana", horario.DiaSemana);
                 datos.SetearParametro("@horaInicio", horario.HoraInicio);
                 datos.SetearParametro("@horaFin", horario.HoraFin);
                 datos.SetearParametro("@cupoMaximo", horario.CupoMaximo);
+                datos.SetearParametro("@idActividad", horario.Actividad.Id);
                 datos.SetearParametro("@id", horario.Id);
                 datos.EjecutarAccion();
             }
@@ -103,7 +123,12 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("SELECT Id, DiaSemana, HoraInicio, HoraFin, CupoMaximo, Activo FROM HORARIOS WHERE Id = @id");
+                datos.SetearConsulta(@"SELECT H.Id, H.DiaSemana, H.HoraInicio, H.HoraFin,
+                             H.CupoMaximo, H.IdActividad,
+                             A.Nombre AS ActividadNombre, H.Activo
+                      FROM HORARIOS H
+                      INNER JOIN ACTIVIDADES A ON H.IdActividad = A.Id
+                      WHERE H.Id = @id");
                 datos.SetearParametro("@id", id);
                 datos.EjecutarLectura();
 
@@ -116,6 +141,9 @@ namespace Negocio
                 horario.HoraInicio = (System.TimeSpan)datos.Lector["HoraInicio"];
                 horario.HoraFin = (System.TimeSpan)datos.Lector["HoraFin"];
                 horario.CupoMaximo = (int)datos.Lector["CupoMaximo"];
+                horario.Actividad = new Actividad();
+                horario.Actividad.Id = (int)datos.Lector["IdActividad"];
+                horario.Actividad.Nombre = (string)datos.Lector["ActividadNombre"];
                 horario.Activo = (bool)datos.Lector["Activo"];
 
                 return horario;

@@ -14,5 +14,6 @@ namespace Dominio
         public TimeSpan HoraFin { get; set; }
         public int CupoMaximo { get; set; }
         public bool Activo { get; set; }
+        public Actividad Actividad { get; set; }
     }
 }
