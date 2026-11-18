@@ -11,6 +11,7 @@
             color: red;
             font-size: 12px;
         }
+
     </style>
 
     <div class="card mb-4">
@@ -41,15 +42,13 @@
                 </div>
             </div>
             <div class="row g-3 mt-1">
-                <div class="col-md-3">
-                    <div class="form-check">
-                        <asp:CheckBox ID="chkIncluyeMusculacion" runat="server" CssClass="form-check-input" Text="Incluye Musculación" Checked="true" />
-                    </div>
+                <div class="col-auto">
+                    <asp:CheckBox ID="chkIncluyeMusculacion" runat="server" ClientIDMode="Static" Checked="false" />
+                    <label for="chkIncluyeMusculacion">Incluye Musculación</label>
                 </div>
-                <div class="col-md-3">
-                    <div class="form-check">
-                        <asp:CheckBox ID="chkIncluyeClases" runat="server" CssClass="form-check-input" Text="Incluye Clases" Checked="true" />
-                    </div>
+                <div class="col-auto">
+                    <asp:CheckBox ID="chkIncluyeClases" runat="server" ClientIDMode="Static" Checked="false" />
+                    <label for="chkIncluyeClases">Incluye Clases</label>
                 </div>
             </div>
            <asp:Label ID="lblErrorPlan" runat="server" CssClass="validacion" Visible="false"></asp:Label>

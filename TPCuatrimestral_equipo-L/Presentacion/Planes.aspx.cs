@@ -136,8 +136,8 @@ namespace Presentacion
             txtDescripcion.Text = "";
             txtPrecio.Text = "";
             txtClasesSemanales.Text = "";
-            chkIncluyeMusculacion.Checked = true;
-            chkIncluyeClases.Checked = true;
+            chkIncluyeMusculacion.Checked = false;
+            chkIncluyeClases.Checked = false;
 
             lblErrorPlan.Text = "";
             lblErrorPlan.Visible = false;
