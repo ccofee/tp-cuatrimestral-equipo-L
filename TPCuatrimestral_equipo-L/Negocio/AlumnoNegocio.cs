@@ -16,10 +16,11 @@ namespace Negocio
 
             try
             {
-                
+
                 string consulta = @"SELECT A.Id, A.IdUsuario, A.DNI, A.Nombre, A.Apellido, A.Email, A.Telefono, 
                                            A.FechaNacimiento, A.IdPlan, P.Descripcion AS NombrePlan, P.Precio, 
-                                           P.ClasesSemanales, A.FechaVencimientoPlan, A.FechaAlta, A.Activo 
+                                           P.ClasesSemanales, P.IncluyeMusculacion, P.IncluyeClases, 
+                                           A.FechaVencimientoPlan, A.FechaAlta, A.Activo 
                                     FROM ALUMNOS A 
                                     INNER JOIN PLANES P ON A.IdPlan = P.Id 
                                     WHERE A.Activo = 1";
@@ -62,6 +63,8 @@ namespace Negocio
                     aux.Plan.Descripcion = (string)datos.Lector["NombrePlan"];
                     aux.Plan.Precio = (decimal)datos.Lector["Precio"];
                     aux.Plan.ClasesSemanales = (int)datos.Lector["ClasesSemanales"];
+                    aux.Plan.IncluyeMusculacion = (bool)datos.Lector["IncluyeMusculacion"];
+                    aux.Plan.IncluyeClases = (bool)datos.Lector["IncluyeClases"];
 
                     lista.Add(aux);
                 }
@@ -253,7 +256,8 @@ namespace Negocio
             {
                 string consulta = @"SELECT A.Id, A.IdUsuario, A.DNI, A.Nombre, A.Apellido, A.Email, A.Telefono, 
                                             A.FechaNacimiento, A.IdPlan, P.Descripcion AS NombrePlan, P.Precio, 
-                                            P.ClasesSemanales, A.FechaVencimientoPlan, A.FechaAlta , A.Activo 
+                                            P.ClasesSemanales, P.IncluyeMusculacion, P.IncluyeClases, 
+                                            A.FechaVencimientoPlan, A.FechaAlta, A.Activo 
                                     FROM ALUMNOS A 
                                     INNER JOIN PLANES P ON A.IdPlan = P.Id 
                                     WHERE A.IdUsuario = @idUsuario AND A.Activo = 1";
@@ -289,12 +293,14 @@ namespace Negocio
                     aux.Usuario = new Usuario();
                     aux.Usuario.Id = (int)datos.Lector["IdUsuario"];
 
-                    //planb
+                    //plan
                     aux.Plan = new Plan();
                     aux.Plan.Id = (int)datos.Lector["IdPlan"];
                     aux.Plan.Descripcion = (string)datos.Lector["NombrePlan"];
                     aux.Plan.Precio = (decimal)datos.Lector["Precio"];
                     aux.Plan.ClasesSemanales = (int)datos.Lector["ClasesSemanales"];
+                    aux.Plan.IncluyeMusculacion = (bool)datos.Lector["IncluyeMusculacion"];
+                    aux.Plan.IncluyeClases = (bool)datos.Lector["IncluyeClases"];
 
                     return aux;
                 }
