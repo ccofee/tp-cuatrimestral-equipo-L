@@ -87,6 +87,24 @@ namespace Negocio
 
         public void BajaLogica(int id)
         {
+            AccesoDatos consulta = new AccesoDatos();
+            bool hayAlumnosActivos;
+
+            try
+            {
+                consulta.SetearConsulta("SELECT Id FROM ALUMNOS WHERE Activo = 1 AND IdPlan = @id");
+                consulta.SetearParametro("@id", id);
+                consulta.EjecutarLectura();
+                hayAlumnosActivos = consulta.Lector.Read();
+            }
+            finally
+            {
+                consulta.CerrarConexion();
+            }
+
+            if (hayAlumnosActivos)
+                throw new Exception("No se puede dar de baja el plan: tiene alumnos activos asociados.");
+
             AccesoDatos datos = new AccesoDatos();
 
             try
