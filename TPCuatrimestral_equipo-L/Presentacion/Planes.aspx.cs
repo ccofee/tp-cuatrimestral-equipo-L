@@ -27,6 +27,8 @@ namespace Presentacion
                 txtDescripcion.Text = seleccionado.Descripcion;
                 txtPrecio.Text = seleccionado.Precio.ToString(CultureInfo.InvariantCulture);
                 txtClasesSemanales.Text = seleccionado.ClasesSemanales.ToString(CultureInfo.InvariantCulture);
+                chkIncluyeMusculacion.Checked = seleccionado.IncluyeMusculacion;
+                chkIncluyeClases.Checked = seleccionado.IncluyeClases;
             }
         }
 
@@ -42,6 +44,8 @@ namespace Presentacion
             plan.Descripcion = txtDescripcion.Text.Trim();
             plan.Precio = decimal.Parse(txtPrecio.Text, CultureInfo.InvariantCulture);
             plan.ClasesSemanales = int.Parse(txtClasesSemanales.Text, CultureInfo.InvariantCulture);
+            plan.IncluyeMusculacion = chkIncluyeMusculacion.Checked;
+            plan.IncluyeClases = chkIncluyeClases.Checked;
 
             if (plan.Precio <= 0)
             {
@@ -50,9 +54,9 @@ namespace Presentacion
                 return;
             }
 
-            if (plan.ClasesSemanales < 1 || plan.ClasesSemanales > 14)
+            if (plan.ClasesSemanales < 0 || plan.ClasesSemanales > 14)
             {
-                lblErrorPlan.Text = "Las clases por semana deben estar entre 1 y 14.";
+                lblErrorPlan.Text = "Las clases por semana deben estar entre 0 y 14.";
                 lblErrorPlan.Visible = true;
                 return;
             }
@@ -118,6 +122,8 @@ namespace Presentacion
             txtDescripcion.Text = "";
             txtPrecio.Text = "";
             txtClasesSemanales.Text = "";
+            chkIncluyeMusculacion.Checked = true;
+            chkIncluyeClases.Checked = true;
 
             lblErrorPlan.Text = "";
             lblErrorPlan.Visible = false;

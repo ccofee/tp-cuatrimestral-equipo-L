@@ -40,6 +40,18 @@
                     <asp:Button ID="btnEliminar" runat="server" CssClass="btn btn-danger" Text="Eliminar" CausesValidation="false" OnClick="btnEliminar_Click" />
                 </div>
             </div>
+            <div class="row g-3 mt-1">
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <asp:CheckBox ID="chkIncluyeMusculacion" runat="server" CssClass="form-check-input" Text="Incluye Musculación" Checked="true" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <asp:CheckBox ID="chkIncluyeClases" runat="server" CssClass="form-check-input" Text="Incluye Clases" Checked="true" />
+                    </div>
+                </div>
+            </div>
            <asp:Label ID="lblErrorPlan" runat="server" CssClass="validacion" Visible="false"></asp:Label>
         </div>
     </div>
@@ -53,6 +65,10 @@
             <asp:BoundField DataField="Precio" HeaderText="Precio mensual" DataFormatString="{0:C}"
                 HeaderStyle-CssClass="text-end" ItemStyle-CssClass="text-end" />
             <asp:BoundField DataField="ClasesSemanales" HeaderText="Clases por semana"
+                HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center" />
+            <asp:CheckBoxField DataField="IncluyeMusculacion" HeaderText="Musculación"
+                HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center" />
+            <asp:CheckBoxField DataField="IncluyeClases" HeaderText="Clases"
                 HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center" />
         </Columns>
     </asp:GridView>
