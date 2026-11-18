@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.UI;
+using Dominio;
 
 namespace Presentacion
 {
@@ -7,6 +8,10 @@ namespace Presentacion
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado == null)
+                Response.Redirect("Login.aspx");
         }
     }
 }

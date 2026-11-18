@@ -12,6 +12,14 @@ namespace Presentacion
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 List<Reserva> reservas = new List<Reserva>();

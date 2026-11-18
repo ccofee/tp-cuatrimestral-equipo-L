@@ -14,32 +14,31 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="Default.aspx">Gimnasio</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrincipal" aria-controls="navPrincipal" aria-expanded="false" aria-label="Mostrar navegacion">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navPrincipal">
-                    <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" href="Planes.aspx">Planes</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Alumnos.aspx">Alumnos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Usuarios.aspx">Usuarios</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Actividades.aspx">Actividades</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Horarios.aspx">Horarios</a></li>
-                        <li class="nav-item"><a class="nav-link" href="Reservas.aspx">Reservas</a></li>
-                    </ul>
-                    <ul class="navbar-nav ms-auto">
-                        <asp:PlaceHolder ID="phLogueado" runat="server" Visible="false">
+                <asp:PlaceHolder ID="phMenuLogueado" runat="server" Visible="false">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrincipal" aria-controls="navPrincipal" aria-expanded="false" aria-label="Mostrar navegacion">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navPrincipal">
+                        <ul class="navbar-nav">
+                            <asp:PlaceHolder ID="phMenuAdmin" runat="server" Visible="false">
+                                <li class="nav-item"><a class="nav-link" href="Planes.aspx">Planes</a></li>
+                                <li class="nav-item"><a class="nav-link" href="Alumnos.aspx">Alumnos</a></li>
+                                <li class="nav-item"><a class="nav-link" href="Usuarios.aspx">Usuarios</a></li>
+                                <li class="nav-item"><a class="nav-link" href="Actividades.aspx">Actividades</a></li>
+                                <li class="nav-item"><a class="nav-link" href="Horarios.aspx">Horarios</a></li>
+                            </asp:PlaceHolder>
+                            <li class="nav-item"><a class="nav-link" href="Reservas.aspx">Reservas</a></li>
+                        </ul>
+                        <ul class="navbar-nav ms-auto">
                             <li class="nav-item nav-link text-white-50">Hola,
                                 <asp:Literal ID="litNombreUsuario" runat="server" /></li>
                             <li class="nav-item">
                                 <asp:LinkButton ID="btnCerrarSesion" runat="server" CssClass="nav-link" Text="Cerrar sesión" CausesValidation="false"
                                     OnClientClick="return confirm('¿Seguro que querés cerrar sesión?');" OnClick="btnCerrarSesion_Click" />
                             </li>
-                        </asp:PlaceHolder>
-                        <asp:PlaceHolder ID="phNoLogueado" runat="server" Visible="false">
-                            <li class="nav-item"><a class="nav-link" href="Login.aspx">Iniciar sesión</a></li>
-                        </asp:PlaceHolder>
-                    </ul>
-                </div>
+                        </ul>
+                    </div>
+                </asp:PlaceHolder>
             </div>
         </nav>
 

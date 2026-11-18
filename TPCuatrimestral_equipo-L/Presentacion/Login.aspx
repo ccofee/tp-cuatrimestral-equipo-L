@@ -4,8 +4,6 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>Iniciar sesión</h2>
-
     <style>
         .validacion {
             color: red;
@@ -13,22 +11,26 @@
         }
     </style>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="mb-3">
-                <label for="txtEmail" class="form-label">Email</label>
-                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" />
-                <asp:RequiredFieldValidator runat="server"
-                    ControlToValidate="txtEmail" ErrorMessage="El email es requerido" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="card shadow-sm" style="width: 100%; max-width: 380px;">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4">Iniciar sesión</h2>
+
+                <div class="mb-3">
+                    <label for="txtEmail" class="form-label">Email</label>
+                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" />
+                    <asp:RequiredFieldValidator runat="server"
+                        ControlToValidate="txtEmail" ErrorMessage="El email es requerido" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
+                </div>
+                <div class="mb-3">
+                    <label for="txtClave" class="form-label">Contraseña</label>
+                    <asp:TextBox ID="txtClave" runat="server" CssClass="form-control" TextMode="Password" />
+                    <asp:RequiredFieldValidator runat="server"
+                        ControlToValidate="txtClave" ErrorMessage="La contraseña es requerida" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
+                </div>
+                <asp:Button ID="btnIngresar" runat="server" CssClass="btn btn-primary w-100" Text="Ingresar" OnClick="btnIngresar_Click" />
+                <asp:Label ID="lblErrorLogin" runat="server" CssClass="validacion d-block mt-2 text-center" Visible="false"></asp:Label>
             </div>
-            <div class="mb-3">
-                <label for="txtClave" class="form-label">Contraseña</label>
-                <asp:TextBox ID="txtClave" runat="server" CssClass="form-control" TextMode="Password" />
-                <asp:RequiredFieldValidator runat="server"
-                    ControlToValidate="txtClave" ErrorMessage="La contraseña es requerida" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
-            </div>
-            <asp:Button ID="btnIngresar" runat="server" CssClass="btn btn-primary" Text="Ingresar" OnClick="btnIngresar_Click" />
-            <asp:Label ID="lblErrorLogin" runat="server" CssClass="validacion d-block mt-2" Visible="false"></asp:Label>
         </div>
     </div>
 </asp:Content>

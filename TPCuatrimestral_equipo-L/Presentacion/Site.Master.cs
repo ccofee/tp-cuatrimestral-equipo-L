@@ -12,12 +12,11 @@ namespace Presentacion
 
             if (usuarioLogueado != null)
             {
-                phLogueado.Visible = true;
+                phMenuLogueado.Visible = true;
                 litNombreUsuario.Text = usuarioLogueado.Nombre;
-            }
-            else
-            {
-                phNoLogueado.Visible = true;
+
+                if (usuarioLogueado.Rol == 1)
+                    phMenuAdmin.Visible = true;
             }
         }
 
