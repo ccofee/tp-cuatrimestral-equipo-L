@@ -69,6 +69,7 @@ namespace Presentacion
             usuario.Rol = int.Parse(ddlRol.SelectedValue, CultureInfo.InvariantCulture);
 
             UsuarioNegocio negocio = new UsuarioNegocio();
+            string advertencia = null;
 
             try
             {
@@ -82,7 +83,10 @@ namespace Presentacion
                     }
 
                     usuario.Clave = txtClave.Text;
-                    negocio.Agregar(usuario);
+                    bool vinculado = negocio.Agregar(usuario);
+
+                    if (usuario.Rol == 2 && !vinculado)
+                        advertencia = "El usuario se creó, pero no se encontró un Alumno activo sin cuenta con ese email para vincular.";
                 }
                 else
                 {
@@ -101,6 +105,12 @@ namespace Presentacion
 
             LimpiarFormulario();
             CargarGrilla();
+
+            if (advertencia != null)
+            {
+                lblErrorUsuario.Text = advertencia;
+                lblErrorUsuario.Visible = true;
+            }
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)

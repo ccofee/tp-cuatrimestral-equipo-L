@@ -36,7 +36,7 @@ namespace Negocio
             }
         }
 
-        public void Agregar(Usuario nuevo)
+        public bool Agregar(Usuario nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -54,6 +54,77 @@ namespace Negocio
             {
                 datos.CerrarConexion();
             }
+
+            //si es alumno, vincula el usuario recien creado con su registro en ALUMNOS (FK va de ALUMNOS hacia USUARIOS)
+            if (nuevo.Rol == 2)
+            {
+                int idUsuarioGenerado = BuscarIdUsuarioPorEmail(nuevo.Email);
+
+                if (idUsuarioGenerado > 0)
+                    return VincularAlumno(idUsuarioGenerado, nuevo.Email);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private int BuscarIdUsuarioPorEmail(string email)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM USUARIOS WHERE Email = @email");
+                datos.SetearParametro("@email", email);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return (int)datos.Lector["Id"];
+
+                return 0;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        private bool VincularAlumno(int idUsuario, string email)
+        {
+            AccesoDatos consulta = new AccesoDatos();
+            bool existeAlumnoSinVincular;
+
+            try
+            {
+                consulta.SetearConsulta("SELECT Id FROM ALUMNOS WHERE Email = @email AND Activo = 1 AND IdUsuario IS NULL");
+                consulta.SetearParametro("@email", email);
+                consulta.EjecutarLectura();
+                existeAlumnoSinVincular = consulta.Lector.Read();
+            }
+            finally
+            {
+                consulta.CerrarConexion();
+            }
+
+            if (!existeAlumnoSinVincular)
+                return false;
+
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE ALUMNOS SET IdUsuario = @idUsuario WHERE Email = @email AND Activo = 1 AND IdUsuario IS NULL");
+                datos.SetearParametro("@idUsuario", idUsuario);
+                datos.SetearParametro("@email", email);
+                datos.EjecutarAccion();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return true;
         }
 
         public void Modificar(Usuario usuario)
