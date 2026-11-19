@@ -37,23 +37,23 @@
                 position: relative;
             }
 
-             .chk-atrasado input[type="checkbox"]:checked {
-                 background-color: #dc3545;
-                 border-color: #dc3545;
-             }
+                .chk-atrasado input[type="checkbox"]:checked {
+                    background-color: #dc3545;
+                    border-color: #dc3545;
+                }
 
-             .chk-atrasado input[type="checkbox"]:checked::after {
-                 content: "✓";
-                 color: #ffffff;
-                 font-size: 13px;
-                 font-weight: bold;
-                 position: absolute;
-                 top: -3px;
-                 left: 2px;
-              }
+                    .chk-atrasado input[type="checkbox"]:checked::after {
+                        content: "✓";
+                        color: #ffffff;
+                        font-size: 13px;
+                        font-weight: bold;
+                        position: absolute;
+                        top: -3px;
+                        left: 2px;
+                    }
         </style>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
             <!-- DNI obligatorio y 7 u 8 digitos -->
             <div class="mb-3">
                 <label for="txtDni" class="form-label">DNI</label>
@@ -86,46 +86,64 @@
                 <asp:RegularExpressionValidator runat="server" ControlToValidate="txtEmail" ErrorMessage="Formato email, por favor"
                     ValidationExpression="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" CssClass="validacion"></asp:RegularExpressionValidator>
             </div>
-            <!-- telefono -->
-            <div class="mb-3">
-                <label for="txtTelefono" class="form-label">Teléfono</label>
-                <asp:TextBox ID="txtTelefono" runat="server" CssClass="form-control"></asp:TextBox>
+            <div class="row">
+                <!-- telefono -->
+                <div class="col-md-6 mb-3">
+                    <label for="txtTelefono" class="form-label">Teléfono</label>
+                    <asp:TextBox ID="txtTelefono" runat="server" CssClass="form-control"></asp:TextBox>
+                </div>
+                <!-- fecha nac -->
+                <div class="col-md-6 mb-3">
+                    <label for="txtFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                    <asp:TextBox ID="txtFechaNacimiento" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                </div>
             </div>
-            <!-- fecha nac -->
-            <div class="mb-3">
-                <label for="txtFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
-                <asp:TextBox ID="txtFechaNacimiento" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+            <div class="row">
+                <!-- plan obligatorio -->
+                <div class="col-md-6 mb-3">
+                    <label for="ddlPlan" class="form-label">Plan</label>
+                    <asp:DropDownList ID="ddlPlan" runat="server" CssClass="form-select" AppendDataBoundItems="true">
+                        <asp:ListItem Text="-- Seleccione un Plan --" Value="0" />
+                    </asp:DropDownList>
+                    <asp:RequiredFieldValidator runat="server"
+                        ControlToValidate="ddlPlan" InitialValue="0" ErrorMessage="Debe seleccionar un plan" CssClass="validacion"></asp:RequiredFieldValidator>
+                </div>
+                <!-- fecha vencimiento -->
+                <div class="col-md-6 mb-3">
+                    <label for="txtFechaVencimiento" class="form-label">Vencimiento del Plan</label>
+                    <asp:TextBox ID="txtFechaVencimiento" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                </div>
             </div>
-            <!-- plan obligatorio -->
-            <div class="mb-3">
-                <label for="ddlPlan" class="form-label">Plan</label>
-                <asp:DropDownList ID="ddlPlan" runat="server" CssClass="form-select" AppendDataBoundItems="true">
-                    <asp:ListItem Text="-- Seleccione un Plan --" Value="0" />
-                </asp:DropDownList>
-                <asp:RequiredFieldValidator runat="server"
-                    ControlToValidate="ddlPlan" InitialValue="0" ErrorMessage="Debe seleccionar un plan" CssClass="validacion"></asp:RequiredFieldValidator>
-            </div>
-            <!-- fecha vencimiento -->
-            <div class="mb-3">
-                <label for="txtFechaVencimiento" class="form-label">Vencimiento del Plan</label>
-                <asp:TextBox ID="txtFechaVencimiento" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-            </div>
+
             <!-- botones con CausesValidation -->
             <div class="mb-3">
                 <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-primary" OnClick="btnGuardar_Click" />
                 <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" CausesValidation="false" OnClick="btnCancelar_Click" />
                 <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" CssClass="btn btn-danger" CausesValidation="false" OnClick="btnEliminar_Click" />
                 <asp:Button ID="btnRenovar" runat="server" Text="Registrar Pago" CssClass="btn btn-success" CausesValidation="false" OnClick="btnRenovar_Click" />
+                <asp:Label ID="lblMensaje" runat="server" CssClass="alert alert-success d-block mt-3" Visible="false"></asp:Label>
             </div>
         </div>
 
-        <div class="col-md-7">
+        <div class="col-md-8">
             <h4>Listado</h4>
 
-            <div class="mb-3">
-                <label for="txtFiltro" class="form-label">Filtrar</label>
-                <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control"
-                    AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
+            <!-- filtros -->
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label for="txtFiltro" class="form-label">Filtrar</label>
+                    <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control"
+                        AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="ddlEstado" class="form-label">Estado de cuota</label>
+                    <asp:DropDownList ID="ddlEstado" runat="server" CssClass="form-select"
+                        AutoPostBack="true" OnSelectedIndexChanged="ddlEstado_SelectedIndexChanged">
+                        <asp:ListItem Text="Todos" Value="Todos" />
+                        <asp:ListItem Text="Al día" Value="AlDia" />
+                        <asp:ListItem Text="Atrasados" Value="Atrasado" />
+                    </asp:DropDownList>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -136,15 +154,12 @@
                     OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged">
                     <Columns>
                         <asp:BoundField DataField="DNI" HeaderText="DNI" />
-                        <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
-                        <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
-                        <asp:BoundField DataField="Email" HeaderText="Email" />
+                        <asp:BoundField DataField="NombreCompleto" HeaderText="Alumno" />
                         <asp:BoundField DataField="Telefono" HeaderText="Teléfono" />
-                        <asp:BoundField DataField="FechaNacimiento" HeaderText="Fecha de Nacimiento" DataFormatString="{0:dd/MM/yyyy}" />
-                        <asp:BoundField DataField="Plan.Descripcion" HeaderText="Plan" />
-                        <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento del Plan" DataFormatString="{0:dd/MM/yyyy}" />
-                        <asp:BoundField HeaderText="Antigüedad" DataField="Antiguedad" />
-                        <asp:CheckBoxField HeaderText="Atrasado" DataField="Atrasado" ItemStyle-CssClass="chk-atrasado text-center" />
+                        <asp:BoundField DataField="Plan" HeaderText="Plan" />
+                        <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento" DataFormatString="{0:dd/MM/yyyy}" />
+                        <asp:BoundField DataField="Antiguedad" HeaderText="Antigüedad" />
+                        <asp:CheckBoxField DataField="Atrasado" HeaderText="Atrasado" ItemStyle-CssClass="chk-atrasado text-center" />
                     </Columns>
                 </asp:GridView>
             </div>

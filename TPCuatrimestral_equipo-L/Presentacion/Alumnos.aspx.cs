@@ -31,6 +31,8 @@ namespace Presentacion
             {
                 cargarGrilla();
                 cargarPlanes();
+                btnEliminar.Enabled = false;
+                btnRenovar.Enabled = false;
             }
         }
 
@@ -74,6 +76,7 @@ namespace Presentacion
             try
             {
 
+                lblMensaje.Visible = false;
                 int idSeleccionado = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
 
                 AlumnoNegocio negocio = new AlumnoNegocio();
@@ -93,10 +96,13 @@ namespace Presentacion
                     else
                         txtFechaNacimiento.Text = string.Empty;
 
-
                     ddlPlan.SelectedValue = seleccionado.Plan.Id.ToString();
                     //cambio de formato de la fecha
                     txtFechaVencimiento.Text = seleccionado.FechaVencimientoPlan.ToString("yyyy-MM-dd");
+
+                    //habilito botones sobre el alumno seleccionado
+                    btnEliminar.Enabled = true;
+                    btnRenovar.Enabled = true;
                 }
             }
             catch (Exception ex)
@@ -110,18 +116,7 @@ namespace Presentacion
         {
             try
             {
-                List<Alumno> lista = (List<Alumno>)Session["listaAlumnos"];
-
-                List<Alumno> listaFiltrada = lista.FindAll(x =>
-                    x.DNI.ToUpper().Contains(txtFiltro.Text.ToUpper()) ||
-                    x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()) ||
-                    x.Apellido.ToUpper().Contains(txtFiltro.Text.ToUpper())
-                );
-
-                //desmarco si habia algun alumno seleccionado
-                dgvAlumnos.SelectedIndex = -1;
-                dgvAlumnos.DataSource = listaFiltrada;
-                dgvAlumnos.DataBind();
+                aplicarFiltros();
             }
             catch (Exception ex)
             {
@@ -130,13 +125,49 @@ namespace Presentacion
             }
         }
 
+        protected void ddlEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                aplicarFiltros();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+        private void aplicarFiltros()
+        {
+            List<Alumno> lista = (List<Alumno>)Session["listaAlumnos"];
+            string filtro = txtFiltro.Text.ToUpper();
+            string estado = ddlEstado.SelectedValue;
+
+            List<Alumno> listaFiltrada = lista.FindAll(x =>
+                (x.DNI.ToUpper().Contains(filtro) ||
+                 x.Nombre.ToUpper().Contains(filtro) ||
+                 x.Apellido.ToUpper().Contains(filtro)) &&
+                (estado == "Todos" ||
+                 (estado == "AlDia" && !x.Atrasado) ||
+                 (estado == "Atrasado" && x.Atrasado))
+            );
+
+            //desmarco si habia algun alumno seleccionado
+            dgvAlumnos.SelectedIndex = -1;
+            btnEliminar.Enabled = false;
+            btnRenovar.Enabled = false;
+
+            dgvAlumnos.DataSource = listaFiltrada;
+            dgvAlumnos.DataBind();
+        }
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-
             try
             {
                 lblErrorDni.Visible = false;
+                lblMensaje.Visible = false;
 
                 Page.Validate();
                 if (!Page.IsValid)
@@ -165,8 +196,10 @@ namespace Presentacion
                 else
                     alumno.FechaVencimientoPlan = DateTime.Today.AddDays(30);
 
+                bool esAlta = (dgvAlumnos.SelectedIndex == -1);
+
                 //seleccion de ALTA o MODIFICACION + control de DNI repetido
-                if (dgvAlumnos.SelectedIndex == -1)
+                if (esAlta)
                 {
                     //control DNI
                     if (negocio.existeDni(alumno.DNI))
@@ -181,14 +214,20 @@ namespace Presentacion
                 else
                 {
                     alumno.Id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
-                    negocio.modificar(alumno);    
+                    negocio.modificar(alumno);
                 }
 
-                 //actualizo y limpio campos
-                 cargarGrilla();
-                 limpiarCampos();
+                //actualizo y limpio campos
+                cargarGrilla();
+                limpiarCampos();
 
-             }
+                if (esAlta)
+                    lblMensaje.Text = "Alumno agregado correctamente.";
+                else
+                    lblMensaje.Text = "Alumno modificado correctamente.";
+
+                lblMensaje.Visible = true;
+            }
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
@@ -217,14 +256,22 @@ namespace Presentacion
             if (ddlPlan.Items.Count > 0)
                 ddlPlan.SelectedIndex = 0;
 
-            //limpieza de DNI
+            if (ddlEstado.Items.Count > 0)
+                ddlEstado.SelectedIndex = 0;
+
+            //limpieza de DNI y mensaje
             lblErrorDni.Text = string.Empty;
             lblErrorDni.Visible = false;
+            lblMensaje.Text = string.Empty;
+            lblMensaje.Visible = false;
 
-            //vuelta al estado inicial de la grillla
+            //deshabilito botones de seleccion
+            btnEliminar.Enabled = false;
+            btnRenovar.Enabled = false;
+
+            //vuelta al estado inicial de la grilla
             dgvAlumnos.SelectedIndex = -1;
         }
-
 
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
@@ -239,6 +286,9 @@ namespace Presentacion
 
                     cargarGrilla();
                     limpiarCampos();
+
+                    lblMensaje.Text = "Alumno dado de baja correctamente.";
+                    lblMensaje.Visible = true;
                 }
             }
             catch (Exception ex)
@@ -252,7 +302,6 @@ namespace Presentacion
         {
             try
             {
-
                 if (dgvAlumnos.SelectedIndex != -1)
                 {
                     int idSeleccionado = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
@@ -270,9 +319,12 @@ namespace Presentacion
 
                         cargarGrilla();
                         limpiarCampos();
+
+                        Alumno actualizado = ((List<Alumno>)Session["listaAlumnos"]).Find(a => a.Id == idSeleccionado);
+                        lblMensaje.Text = "Pago registrado correctamente. Nuevo vencimiento: " + actualizado.FechaVencimientoPlan.ToString("dd/MM/yyyy");
+                        lblMensaje.Visible = true;
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -280,8 +332,5 @@ namespace Presentacion
                 throw ex;
             }
         }
-
-
-
     }
 }

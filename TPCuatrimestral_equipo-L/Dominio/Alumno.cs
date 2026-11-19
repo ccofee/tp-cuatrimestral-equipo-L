@@ -48,6 +48,12 @@ namespace Dominio
         }
 
 
+        public string NombreCompleto
+        {
+            get { return Apellido + ", " + Nombre; }
+        }
+
+
         public override string ToString()
         {
             return Apellido + ", " + Nombre;
