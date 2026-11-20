@@ -29,7 +29,7 @@ namespace Dominio
         }
 
         //calcula la antiguedad del alumno en meses desde FechaAlta
-        public string Antiguedad
+        public int AntiguedadMeses
         {
             get
             {
@@ -37,6 +37,16 @@ namespace Dominio
 
                 if (DateTime.Today.Day < FechaAlta.Day)
                     meses--;
+
+                return meses < 0 ? 0 : meses;
+            }
+        }
+
+        public string Antiguedad
+        {
+            get
+            {
+                int meses = AntiguedadMeses;
 
                 if (meses <= 0)
                     return "< de 1 mes";
