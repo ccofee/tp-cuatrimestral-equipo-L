@@ -12,22 +12,41 @@
 
                 <div class="row mb-3">
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>Alumno</label>
                         <asp:TextBox ID="txtAlumno" runat="server" CssClass="form-control" />
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                            <label>Actividad</label>
+
+                            <asp:DropDownList
+                                ID="ddlActividad"
+                                runat="server"
+                                CssClass="form-select"
+                                AutoPostBack="true"
+                                AppendDataBoundItems="true"
+                                OnSelectedIndexChanged="ddlActividad_SelectedIndexChanged">
+                                
+                                <asp:ListItem Text="-- Seleccione una actividad --" Value="0" />
+
+                            </asp:DropDownList>
+                        </div>
+                   
+                    <div class="col-md-3">
                         <label>Horario</label>
                         <asp:DropDownList ID="ddlHorario" runat="server" CssClass="form-select">
-                            <asp:ListItem Text="Lunes 18:00 - 19:00" Value="1" />
-                            <asp:ListItem Text="Miércoles 19:00 - 20:00" Value="2" />
+                            <asp:ListItem Text="-- Seleccione un horario --" Value="0" />
                         </asp:DropDownList>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>Fecha de clase</label>
-                        <asp:TextBox ID="txtFechaClase" runat="server" CssClass="form-control" />
+                        <asp:TextBox
+                                ID="txtFechaClase"
+                                  runat="server"
+                                CssClass="form-control"
+                                TextMode="Date" />
                     </div>
 
                 </div>

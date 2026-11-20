@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Negocio;
 
 namespace Presentacion
 {
@@ -22,26 +23,53 @@ namespace Presentacion
 
             if (!IsPostBack)
             {
-                List<Reserva> reservas = new List<Reserva>();
+                CargarActividades();
+                CargarReservas();
+            }
+        }
+        private void CargarActividades()
+        {
+            ActividadNegocio negocio = new ActividadNegocio();
 
-                reservas.Add(new Reserva
+            ddlActividad.DataSource = negocio.listar();
+            ddlActividad.DataTextField = "Nombre";
+            ddlActividad.DataValueField = "Id";
+            ddlActividad.DataBind();
+        }
+        private void CargarReservas()
+        {
+            ReservaNegocio negocio = new ReservaNegocio();
+
+            dgvReservas.DataSource = negocio.Listar();
+            dgvReservas.DataBind();
+        }
+        protected void ddlActividad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ddlHorario.Items.Clear();
+            ddlHorario.Items.Add(new ListItem("-- Seleccione un horario --", "0"));
+
+            if (ddlActividad.SelectedValue == "0")
+                return;
+
+            HorarioNegocio negocio = new HorarioNegocio();
+            List<Horario> horarios = negocio.Listar();
+
+            int idActividad = int.Parse(ddlActividad.SelectedValue);
+
+            foreach (Horario horario in horarios)
+            {
+                if (horario.Actividad.Id == idActividad)
                 {
-                    Id = 1,
-                    FechaClase = DateTime.Today.AddDays(1),
-                    Estado = "Reservada",
-                    FechaAlta = DateTime.Now
-                });
+                    ListItem item = new ListItem();
 
-                reservas.Add(new Reserva
-                {
-                    Id = 2,
-                    FechaClase = DateTime.Today.AddDays(3),
-                    Estado = "Reservada",
-                    FechaAlta = DateTime.Now
-                });
+                    item.Text = horario.DiaSemana + " - " +
+                                horario.HoraInicio.ToString(@"hh\:mm") + " a " +
+                                horario.HoraFin.ToString(@"hh\:mm");
 
-                dgvReservas.DataSource = reservas;
-                dgvReservas.DataBind();
+                    item.Value = horario.Id.ToString();
+
+                    ddlHorario.Items.Add(item);
+                }
             }
         }
     }
