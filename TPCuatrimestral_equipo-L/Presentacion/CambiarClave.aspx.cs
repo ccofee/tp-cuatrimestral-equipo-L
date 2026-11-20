@@ -9,9 +9,9 @@ namespace Presentacion
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+            Usuario usuarioPendiente = Session["UsuarioPendienteCambioClave"] as Usuario;
 
-            if (usuarioLogueado == null)
+            if (usuarioPendiente == null)
                 Response.Redirect("Login.aspx");
         }
 
@@ -23,19 +23,20 @@ namespace Presentacion
             if (!Page.IsValid)
                 return;
 
-            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+            Usuario usuarioPendiente = Session["UsuarioPendienteCambioClave"] as Usuario;
 
-            if (usuarioLogueado == null)
+            if (usuarioPendiente == null)
             {
                 Response.Redirect("Login.aspx");
                 return;
             }
 
             UsuarioNegocio negocio = new UsuarioNegocio();
-            negocio.CambiarClavePropia(usuarioLogueado.Id, txtNuevaClave.Text);
+            negocio.CambiarClavePropia(usuarioPendiente.Id, txtNuevaClave.Text);
 
-            usuarioLogueado.DebeCambiarClave = false;
-            Session["UsuarioLogueado"] = usuarioLogueado;
+            usuarioPendiente.DebeCambiarClave = false;
+            Session.Remove("UsuarioPendienteCambioClave");
+            Session["UsuarioLogueado"] = usuarioPendiente;
 
             Response.Redirect("Default.aspx");
         }

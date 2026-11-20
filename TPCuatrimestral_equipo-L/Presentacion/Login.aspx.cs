@@ -28,12 +28,15 @@ namespace Presentacion
                 return;
             }
 
-            Session["UsuarioLogueado"] = usuario;
-
             if (usuario.DebeCambiarClave)
+            {
+                Session["UsuarioPendienteCambioClave"] = usuario;
                 Response.Redirect("CambiarClave.aspx");
-            else
-                Response.Redirect("Default.aspx");
+                return;
+            }
+
+            Session["UsuarioLogueado"] = usuario;
+            Response.Redirect("Default.aspx");
         }
     }
 }
