@@ -25,7 +25,8 @@ namespace Presentacion
         {
             litNombre.Text = usuarioLogueado.Nombre + " " + usuarioLogueado.Apellido;
             litEmail.Text = usuarioLogueado.Email;
-            litRol.Text = usuarioLogueado.RolDescripcion;
+
+            phCambiarClave.Visible = usuarioLogueado.Rol != 1;
 
             if (usuarioLogueado.Rol == 2)
             {
@@ -60,6 +61,9 @@ namespace Presentacion
                 Response.Redirect("Login.aspx");
                 return;
             }
+
+            if (usuarioLogueado.Rol == 1)
+                return;
 
             UsuarioNegocio negocio = new UsuarioNegocio();
             negocio.CambiarClavePropia(usuarioLogueado.Id, txtNuevaClave.Text);

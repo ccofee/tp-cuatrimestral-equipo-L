@@ -33,15 +33,6 @@ namespace Presentacion
         protected global::System.Web.UI.WebControls.Literal litEmail;
 
         /// <summary>
-        /// Control litRol.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litRol;
-
-        /// <summary>
         /// Control phDatosAlumno.
         /// </summary>
         /// <remarks>
@@ -49,6 +40,15 @@ namespace Presentacion
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.PlaceHolder phDatosAlumno;
+
+        /// <summary>
+        /// Control phCambiarClave.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phCambiarClave;
 
         /// <summary>
         /// Control litDni.
