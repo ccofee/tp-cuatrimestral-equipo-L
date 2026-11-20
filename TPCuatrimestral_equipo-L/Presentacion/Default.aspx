@@ -4,7 +4,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h1>Gimnasio Semi Personalizado</h1>
+    <h1>GymConnect</h1>
     <p class="lead">Sistema de gestion de planes, alumnos, horarios y reservas.</p>
 
     <asp:PlaceHolder ID="phAdmin" runat="server" Visible="false">
