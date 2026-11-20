@@ -25,6 +25,7 @@ namespace Presentacion
             }
 
             if (!IsPostBack)
+                CargarActividades();
                 CargarGrilla();
         }
 
@@ -38,6 +39,7 @@ namespace Presentacion
 
             if (seleccionado != null)
             {
+                ddlActividad.SelectedValue = seleccionado.Actividad.Id.ToString();
                 ddlDiaSemana.SelectedValue = seleccionado.DiaSemana.ToString(CultureInfo.InvariantCulture);
                 txtHoraInicio.Text = seleccionado.HoraInicio.ToString(@"hh\:mm");
                 txtHoraFin.Text = seleccionado.HoraFin.ToString(@"hh\:mm");
@@ -172,6 +174,8 @@ namespace Presentacion
             }
 
             Horario horario = new Horario();
+            horario.Actividad = new Actividad();
+            horario.Actividad.Id = int.Parse(ddlActividad.SelectedValue);
             horario.DiaSemana = int.Parse(ddlDiaSemana.SelectedValue, CultureInfo.InvariantCulture);
             horario.HoraInicio = horaInicio;
             horario.HoraFin = horaFin;
@@ -190,6 +194,7 @@ namespace Presentacion
 
         private void LimpiarFormulario()
         {
+            ddlActividad.SelectedIndex = 0;
             ddlDiaSemana.SelectedIndex = 0;
             txtHoraInicio.Text = "";
             txtHoraFin.Text = "";
@@ -199,6 +204,15 @@ namespace Presentacion
             lblErrorHorario.Visible = false;
 
             dgvHorarios.SelectedIndex = -1;
+        }
+        private void CargarActividades()
+        {
+            ActividadNegocio negocio = new ActividadNegocio();
+
+            ddlActividad.DataSource = negocio.listar();
+            ddlActividad.DataTextField = "Nombre";
+            ddlActividad.DataValueField = "Id";
+            ddlActividad.DataBind();
         }
     }
 }

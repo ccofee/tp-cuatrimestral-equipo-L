@@ -19,6 +19,28 @@
 
                 <div class="row mb-3">
                     <div class="col-md-3">
+                     <label>Actividad</label>
+
+                    <asp:DropDownList
+                        ID="ddlActividad"
+                        runat="server"
+                        CssClass="form-select"
+                        AppendDataBoundItems="true">
+
+                        <asp:ListItem Text="-- Seleccione una actividad --" Value="0" />
+
+                    </asp:DropDownList>
+
+                    <asp:RequiredFieldValidator
+                        runat="server"
+                        ControlToValidate="ddlActividad"
+                        InitialValue="0"
+                        ErrorMessage="Requerido"
+                        CssClass="validacion"
+                        Display="Dynamic">
+                    </asp:RequiredFieldValidator>
+                </div>
+                    <div class="col-md-3">
                         <label>Día de la semana</label>
                         <asp:DropDownList ID="ddlDiaSemana" runat="server" CssClass="form-select">
                             <asp:ListItem Text="Lunes" Value="1" />
@@ -77,6 +99,7 @@
                 <asp:BoundField DataField="HoraInicio" HeaderText="Hora inicio" />
                 <asp:BoundField DataField="HoraFin" HeaderText="Hora fin" />
                 <asp:BoundField DataField="CupoMaximo" HeaderText="Cupo máximo" />
+                <asp:BoundField DataField="Actividad" HeaderText="Actividad" />
             </Columns>
 
         </asp:GridView>
