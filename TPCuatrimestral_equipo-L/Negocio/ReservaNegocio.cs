@@ -63,5 +63,110 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+        public int CantidadReservasSemana(int idAlumno, DateTime lunes, DateTime domingo)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT COUNT(*) 
+                              FROM RESERVAS 
+                              WHERE IdAlumno = @idAlumno 
+                              AND FechaClase BETWEEN @lunes AND @domingo
+                              AND Estado != 'Cancelada'");
+
+                datos.SetearParametro("@idAlumno", idAlumno);
+                datos.SetearParametro("@lunes", lunes);
+                datos.SetearParametro("@domingo", domingo);
+
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return (int)datos.Lector[0];
+
+                return 0;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+        public int CantidadReservasHorario(int idHorario, DateTime fechaClase)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT COUNT(*) 
+                              FROM RESERVAS 
+                              WHERE IdHorario = @idHorario 
+                              AND FechaClase = @fechaClase
+                              AND Estado != 'Cancelada'");
+
+                datos.SetearParametro("@idHorario", idHorario);
+                datos.SetearParametro("@fechaClase", fechaClase);
+
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return (int)datos.Lector[0];
+
+                return 0;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+        public bool ExisteReserva(int idAlumno, int idHorario, DateTime fechaClase)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"SELECT Id 
+                              FROM RESERVAS 
+                              WHERE IdAlumno = @idAlumno
+                              AND IdHorario = @idHorario
+                              AND FechaClase = @fechaClase
+                              AND Estado != 'Cancelada'");
+
+                datos.SetearParametro("@idAlumno", idAlumno);
+                datos.SetearParametro("@idHorario", idHorario);
+                datos.SetearParametro("@fechaClase", fechaClase);
+
+                datos.EjecutarLectura();
+
+                return datos.Lector.Read();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+        public int Agregar(Reserva nueva)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"INSERT INTO RESERVAS
+                              (IdAlumno, IdHorario, FechaClase, Estado)
+                              OUTPUT INSERTED.Id
+                              VALUES
+                              (@idAlumno, @idHorario, @fechaClase, @estado)");
+
+                datos.SetearParametro("@idAlumno", nueva.Alumno.Id);
+                datos.SetearParametro("@idHorario", nueva.Horario.Id);
+                datos.SetearParametro("@fechaClase", nueva.FechaClase);
+                datos.SetearParametro("@estado", nueva.Estado);
+
+                return datos.EjecutarAccionScalar();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
     }
 }

@@ -55,7 +55,8 @@
                     ID="btnReservar"
                     runat="server"
                     Text="Reservar"
-                    CssClass="btn btn-primary me-2" />
+                    CssClass="btn btn-primary me-2" 
+                    OnClick="btnReservar_Click"/>
 
                 <asp:Button
                     ID="btnCancelarReserva"

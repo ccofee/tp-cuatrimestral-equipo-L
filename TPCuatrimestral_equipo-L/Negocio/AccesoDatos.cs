@@ -45,7 +45,13 @@ namespace Negocio
             conexion.Open();
             comando.ExecuteNonQuery();
         }
+        public int EjecutarAccionScalar()
+        {
+            comando.Connection = conexion;
+            conexion.Open();
 
+            return int.Parse(comando.ExecuteScalar().ToString());
+        }
         public void CerrarConexion()
         {
             if (lector != null)

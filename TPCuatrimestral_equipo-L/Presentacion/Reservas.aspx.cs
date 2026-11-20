@@ -72,5 +72,104 @@ namespace Presentacion
                 }
             }
         }
+        protected void btnReservar_Click(object sender, EventArgs e)
+        {
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            if (ddlActividad.SelectedValue == "0")
+                return;
+
+            if (ddlHorario.SelectedValue == "0")
+                return;
+
+            DateTime fechaClase;
+
+            if (!DateTime.TryParse(txtFechaClase.Text, out fechaClase))
+                return;
+
+            AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+            Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+
+            if (alumno == null)
+                return;
+
+            // Regla 1: tiene membresia vigente 
+            if (alumno.FechaVencimientoPlan < DateTime.Today ||
+                fechaClase > alumno.FechaVencimientoPlan)
+            {
+                return;
+            }
+
+            // Regla 2: el plan debe incluir clases
+            if (!alumno.Plan.IncluyeClases)
+            {
+                return;
+            }
+            // Regla 3: limite de las clases semanales
+            if (alumno.Plan.ClasesSemanales > 0)
+            {
+                int diferencia = (7 + (fechaClase.DayOfWeek - DayOfWeek.Monday)) % 7;
+                DateTime lunes = fechaClase.AddDays(-diferencia).Date;
+                DateTime domingo = lunes.AddDays(6);
+
+                ReservaNegocio reservaNegocio = new ReservaNegocio();
+
+                int cantidadSemana = reservaNegocio.CantidadReservasSemana(
+                    alumno.Id,
+                    lunes,
+                    domingo
+                );
+
+                if (cantidadSemana >= alumno.Plan.ClasesSemanales)
+                {
+                    return;
+                }
+            }
+            // Regla 4: cupo y reserva duplicada
+            int idHorario = int.Parse(ddlHorario.SelectedValue);
+
+            HorarioNegocio horarioNegocio = new HorarioNegocio();
+            Horario horario = horarioNegocio.BuscarPorId(idHorario);
+
+            if (horario == null)
+                return;
+
+            ReservaNegocio negocioReserva = new ReservaNegocio();
+
+            // Evita reserva duplicada
+            if (negocioReserva.ExisteReserva(alumno.Id, idHorario, fechaClase))
+            {
+                return;
+            }
+
+            // Valida cupo
+            int cantidadHorario = negocioReserva.CantidadReservasHorario(
+                idHorario,
+                fechaClase
+            );
+
+            if (cantidadHorario >= horario.CupoMaximo)
+            {
+                return;
+            }
+            // Crear la reserva
+            Reserva nueva = new Reserva();
+
+            nueva.Alumno = alumno;
+            nueva.Horario = horario;
+            nueva.FechaClase = fechaClase;
+            nueva.Estado = "Reservada";
+
+            int idReserva = negocioReserva.Agregar(nueva);
+
+            // Actualizar la grilla
+            CargarReservas();
+        }
     }
 }
