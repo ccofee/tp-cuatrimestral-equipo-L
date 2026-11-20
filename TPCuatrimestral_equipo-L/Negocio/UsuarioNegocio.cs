@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Dominio;
 
@@ -42,7 +43,7 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("INSERT INTO USUARIOS (Email, Clave, Rol, Nombre, Apellido) VALUES (@email, @clave, @rol, @nombre, @apellido)");
+                datos.SetearConsulta("INSERT INTO USUARIOS (Email, Clave, Rol, Nombre, Apellido, DebeCambiarClave) VALUES (@email, @clave, @rol, @nombre, @apellido, 1)");
                 datos.SetearParametro("@email", nuevo.Email);
                 datos.SetearParametro("@clave", nuevo.Clave);
                 datos.SetearParametro("@rol", nuevo.Rol);
@@ -153,7 +154,24 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("UPDATE USUARIOS SET Clave = @clave WHERE Id = @id");
+                datos.SetearConsulta("UPDATE USUARIOS SET Clave = @clave, DebeCambiarClave = 1 WHERE Id = @id");
+                datos.SetearParametro("@clave", nuevaClave);
+                datos.SetearParametro("@id", id);
+                datos.EjecutarAccion();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void CambiarClavePropia(int id, string nuevaClave)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("UPDATE USUARIOS SET Clave = @clave, DebeCambiarClave = 0 WHERE Id = @id");
                 datos.SetearParametro("@clave", nuevaClave);
                 datos.SetearParametro("@id", id);
                 datos.EjecutarAccion();
@@ -215,7 +233,7 @@ namespace Negocio
 
             try
             {
-                datos.SetearConsulta("SELECT Id, Email, Clave, Rol, Nombre, Apellido, Activo FROM USUARIOS WHERE Email = @email AND Activo = 1");
+                datos.SetearConsulta("SELECT Id, Email, Clave, Rol, Nombre, Apellido, Activo, DebeCambiarClave FROM USUARIOS WHERE Email = @email AND Activo = 1");
                 datos.SetearParametro("@email", email);
                 datos.EjecutarLectura();
 
@@ -230,6 +248,7 @@ namespace Negocio
                 usuario.Nombre = (string)datos.Lector["Nombre"];
                 usuario.Apellido = (string)datos.Lector["Apellido"];
                 usuario.Activo = (bool)datos.Lector["Activo"];
+                usuario.DebeCambiarClave = (bool)datos.Lector["DebeCambiarClave"];
 
                 return usuario;
             }
@@ -237,6 +256,30 @@ namespace Negocio
             {
                 datos.CerrarConexion();
             }
+        }
+
+        public bool RestablecerClave(string email)
+        {
+            Usuario usuario = BuscarPorEmail(email);
+
+            if (usuario == null)
+                return false;
+
+            string claveProvisoria = GenerarClaveProvisoria();
+
+            EmailService servicioMail = new EmailService();
+            servicioMail.EnviarMail(usuario.Email, "Tu nueva contraseña provisoria - GymConnect",
+                "Hola " + usuario.Nombre + ",\n\nTu nueva contraseña provisoria es: " + claveProvisoria +
+                "\n\nIngresá con ella desde Login y te recomendamos cambiarla apenas puedas.");
+
+            CambiarClave(usuario.Id, claveProvisoria);
+
+            return true;
+        }
+
+        private string GenerarClaveProvisoria()
+        {
+            return Guid.NewGuid().ToString("N").Substring(0, 8);
         }
 
         public bool ExisteEmail(string email)

@@ -30,6 +30,9 @@
                 </div>
                 <asp:Button ID="btnIngresar" runat="server" CssClass="btn btn-primary w-100" Text="Ingresar" OnClick="btnIngresar_Click" />
                 <asp:Label ID="lblErrorLogin" runat="server" CssClass="validacion d-block mt-2 text-center" Visible="false"></asp:Label>
+                <div class="text-center mt-3">
+                    <a href="OlvideContrasena.aspx">¿Olvidaste tu contraseña?</a>
+                </div>
             </div>
         </div>
     </div>

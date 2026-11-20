@@ -125,6 +125,20 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="OlvideContrasena.aspx.cs">
+      <DependentUpon>OlvideContrasena.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OlvideContrasena.aspx.designer.cs">
+      <DependentUpon>OlvideContrasena.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CambiarClave.aspx.cs">
+      <DependentUpon>CambiarClave.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CambiarClave.aspx.designer.cs">
+      <DependentUpon>CambiarClave.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Actividades.aspx" />
@@ -138,7 +152,9 @@
     <Content Include="Usuarios.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Error.aspx" />
+    <Content Include="CambiarClave.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="OlvideContrasena.aspx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dominio\Dominio.csproj">
