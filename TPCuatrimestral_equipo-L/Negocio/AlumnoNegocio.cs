@@ -144,26 +144,19 @@ namespace Negocio
             try
             {
                 string consulta = @"UPDATE ALUMNOS SET 
-                                    IdUsuario = @idUsuario, 
-                                    DNI = @dni, 
-                                    Nombre = @nombre, 
-                                    Apellido = @apellido, 
-                                    Email = @email, 
-                                    Telefono = @telefono, 
-                                    FechaNacimiento = @fechaNacimiento, 
-                                    IdPlan = @idPlan, 
-                                    FechaVencimientoPlan = @fechaVencimientoPlan 
-                                   WHERE Id = @id";
+                                        DNI = @dni, 
+                                        Nombre = @nombre, 
+                                        Apellido = @apellido, 
+                                        Email = @email, 
+                                        Telefono = @telefono, 
+                                        FechaNacimiento = @fechaNacimiento, 
+                                        IdPlan = @idPlan, 
+                                        FechaVencimientoPlan = @fechaVencimientoPlan 
+                                    WHERE Id = @id";
 
                 datos.SetearConsulta(consulta);
 
                 datos.SetearParametro("@id", alumno.Id);
-
-                //FK usuario puede ser NULL
-                if (alumno.Usuario != null && alumno.Usuario.Id > 0)
-                    datos.SetearParametro("@idUsuario", alumno.Usuario.Id);
-                else
-                    datos.SetearParametro("@idUsuario", DBNull.Value);
 
                 //obligatorios
                 datos.SetearParametro("@dni", alumno.DNI);
@@ -230,6 +223,35 @@ namespace Negocio
             {
                 datos.SetearConsulta("SELECT Id FROM ALUMNOS WHERE DNI = @dni");
                 datos.SetearParametro("@dni", dni);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+        //para la MODIFICACION
+        public bool existeDni(string dni, int id)
+        {
+
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM ALUMNOS WHERE DNI = @dni AND Id != @id");
+                datos.SetearParametro("@dni", dni);
+                datos.SetearParametro("@id", id);
                 datos.EjecutarLectura();
 
                 if (datos.Lector.Read())

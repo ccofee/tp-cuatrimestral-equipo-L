@@ -214,6 +214,14 @@ namespace Presentacion
                 else
                 {
                     alumno.Id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
+
+                    if (negocio.existeDni(alumno.DNI, alumno.Id))
+                    {
+                        lblErrorDni.Text = "El DNI ingresado ya se encuentra registrado.";
+                        lblErrorDni.Visible = true;
+                        return;
+                    }
+
                     negocio.modificar(alumno);
                 }
 
