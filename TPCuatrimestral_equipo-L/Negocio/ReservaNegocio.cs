@@ -73,7 +73,7 @@ namespace Negocio
                               FROM RESERVAS 
                               WHERE IdAlumno = @idAlumno 
                               AND FechaClase BETWEEN @lunes AND @domingo
-                              AND Estado != 'Cancelada'");
+                              AND Estado = 'Reservada'");
 
                 datos.SetearParametro("@idAlumno", idAlumno);
                 datos.SetearParametro("@lunes", lunes);
@@ -101,7 +101,7 @@ namespace Negocio
                               FROM RESERVAS 
                               WHERE IdHorario = @idHorario 
                               AND FechaClase = @fechaClase
-                              AND Estado != 'Cancelada'");
+                              AND Estado = 'Reservada'");
 
                 datos.SetearParametro("@idHorario", idHorario);
                 datos.SetearParametro("@fechaClase", fechaClase);
@@ -236,6 +236,33 @@ namespace Negocio
                 }
 
                 return null;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+        public void PromoverPrimeroEnEspera(int idHorario, DateTime fechaClase)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(@"UPDATE RESERVAS
+                              SET Estado = 'Reservada'
+                              WHERE Id = (
+                                  SELECT TOP 1 Id
+                                  FROM RESERVAS
+                                  WHERE IdHorario = @idHorario
+                                  AND FechaClase = @fechaClase
+                                  AND Estado = 'EnEspera'
+                                  ORDER BY FechaAlta
+                              )");
+
+                datos.SetearParametro("@idHorario", idHorario);
+                datos.SetearParametro("@fechaClase", fechaClase);
+
+                datos.EjecutarAccion();
             }
             finally
             {

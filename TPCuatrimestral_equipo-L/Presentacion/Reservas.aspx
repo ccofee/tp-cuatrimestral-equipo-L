@@ -76,8 +76,29 @@
             DataKeyNames="Id">
 
             <Columns>
-                <asp:BoundField DataField="FechaClase" HeaderText="Fecha" />
-                <asp:BoundField DataField="Estado" HeaderText="Estado" />
+                <asp:TemplateField HeaderText="Actividad">
+                    <ItemTemplate>
+                        <%# Eval("Horario.Actividad.Nombre") %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:BoundField
+                    DataField="FechaClase"
+                    HeaderText="Fecha"
+                    DataFormatString="{0:dd/MM/yyyy}" />
+
+                <asp:TemplateField HeaderText="Horario">
+                    <ItemTemplate>
+                        <%# ((TimeSpan)Eval("Horario.HoraInicio")).ToString(@"hh\:mm") %>
+                        a
+                        <%# ((TimeSpan)Eval("Horario.HoraFin")).ToString(@"hh\:mm") %>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                <asp:BoundField
+                    DataField="Estado"
+                    HeaderText="Estado" />
+
                 <asp:CommandField ShowSelectButton="True" SelectText="Seleccionar" />
             </Columns>
 

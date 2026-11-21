@@ -38,9 +38,21 @@ namespace Presentacion
         }
         private void CargarReservas()
         {
-            ReservaNegocio negocio = new ReservaNegocio();
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
 
-            dgvReservas.DataSource = negocio.Listar();
+            if (usuarioLogueado == null)
+                return;
+
+            AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+            Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+
+            if (alumno == null)
+                return;
+
+            ReservaNegocio negocio = new ReservaNegocio();
+            List<Reserva> reservas = negocio.Listar();
+
+            dgvReservas.DataSource = reservas.Where(x => x.Alumno.Id == alumno.Id).ToList();
             dgvReservas.DataBind();
         }
         protected void ddlActividad_SelectedIndexChanged(object sender, EventArgs e)
@@ -154,21 +166,22 @@ namespace Presentacion
                 fechaClase
             );
 
-            if (cantidadHorario >= horario.CupoMaximo)
-            {
-                return;
-            }
-            // Crear la reserva
             Reserva nueva = new Reserva();
+           
 
             nueva.Alumno = alumno;
             nueva.Horario = horario;
             nueva.FechaClase = fechaClase;
-            nueva.Estado = "Reservada";
+
+            // si no hay cupo queda en espera
+            if (cantidadHorario >= horario.CupoMaximo)
+                nueva.Estado = "EnEspera";
+            else
+                nueva.Estado = "Reservada";
 
             int idReserva = negocioReserva.Agregar(nueva);
 
-            // Actualizar la grilla
+            // actualiza la grilla
             CargarReservas();
         }
         protected void btnCancelarReserva_Click(object sender, EventArgs e)
@@ -219,8 +232,20 @@ namespace Presentacion
             if (fechaHoraClase <= DateTime.Now.AddHours(2))
                 return;
 
+            // guarda si la reserva ocupaba un cupo
+            bool liberaCupo = reserva.Estado == "Reservada";
+
             // cancela la reserva
             reservaNegocio.Cancelar(idReserva);
+
+            // si libero un cupo busca al primero en espera
+            if (liberaCupo)
+            {
+                reservaNegocio.PromoverPrimeroEnEspera(
+                    reserva.Horario.Id,
+                    reserva.FechaClase
+                );
+            }
 
             // actualiza la grilla
             CargarReservas();
