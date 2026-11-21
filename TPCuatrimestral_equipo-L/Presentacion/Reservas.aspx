@@ -62,7 +62,8 @@
                     ID="btnCancelarReserva"
                     runat="server"
                     Text="Cancelar reserva"
-                    CssClass="btn btn-danger" />
+                    CssClass="btn btn-danger" 
+                    OnClick="btnCancelarReserva_Click"/>
 
             </div>
         </div>
@@ -71,11 +72,13 @@
             ID="dgvReservas"
             runat="server"
             AutoGenerateColumns="False"
-            CssClass="table table-striped table-bordered">
+            CssClass="table table-striped table-bordered"
+            DataKeyNames="Id">
 
             <Columns>
                 <asp:BoundField DataField="FechaClase" HeaderText="Fecha" />
                 <asp:BoundField DataField="Estado" HeaderText="Estado" />
+                <asp:CommandField ShowSelectButton="True" SelectText="Seleccionar" />
             </Columns>
 
         </asp:GridView>

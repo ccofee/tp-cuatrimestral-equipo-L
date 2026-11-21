@@ -171,5 +171,61 @@ namespace Presentacion
             // Actualizar la grilla
             CargarReservas();
         }
+        protected void btnCancelarReserva_Click(object sender, EventArgs e)
+        {
+            // valida que haya una reserva seleccionada
+            if (dgvReservas.SelectedIndex < 0)
+                return;
+
+            int idReserva = Convert.ToInt32(
+                dgvReservas.DataKeys[dgvReservas.SelectedIndex].Value
+            );
+
+            ReservaNegocio reservaNegocio = new ReservaNegocio();
+
+            // busca la reserva seleccionada
+            Reserva reserva = reservaNegocio.BuscarPorId(idReserva);
+
+            if (reserva == null)
+                return;
+
+            // evita cancelar una reserva ya cancelada
+            if (reserva.Estado == "Cancelada")
+                return;
+
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+            Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+
+            if (alumno == null)
+                return;
+
+            // verifica que la reserva sea del alumno
+            if (reserva.Alumno.Id != alumno.Id)
+                return;
+
+            // arma la fecha y hora de la clase
+            DateTime fechaHoraClase =
+                reserva.FechaClase.Date + reserva.Horario.HoraInicio;
+
+            // valida que falten al menos 2 horas para cancelar
+            if (fechaHoraClase <= DateTime.Now.AddHours(2))
+                return;
+
+            // cancela la reserva
+            reservaNegocio.Cancelar(idReserva);
+
+            // actualiza la grilla
+            CargarReservas();
+
+            dgvReservas.SelectedIndex = -1;
+        }
     }
 }
