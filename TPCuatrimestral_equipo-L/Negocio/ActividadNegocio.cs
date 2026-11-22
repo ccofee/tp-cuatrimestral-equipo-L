@@ -128,6 +128,32 @@ namespace Negocio
             }
         }
 
+        public bool tieneHorariosActivos(int idActividad)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM HORARIOS WHERE IdActividad = @idActividad AND Activo = 1");
+                datos.SetearParametro("@idActividad", idActividad);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
         //para el ALTA
         public bool existeNombre(string nombre)
         {

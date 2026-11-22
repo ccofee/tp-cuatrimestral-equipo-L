@@ -63,6 +63,7 @@ namespace Presentacion
             try
             {
                 lblErrorNombre.Visible = false;
+                lblErrorActividad.Visible = false;
 
                 Page.Validate();
                 if (!Page.IsValid)
@@ -117,6 +118,8 @@ namespace Presentacion
             try
             {
                 lblErrorNombre.Visible = false;
+                lblErrorActividad.Visible = false;
+
                 int idSeleccionado = int.Parse(dgvActividades.SelectedDataKey.Value.ToString());
 
                 ActividadNegocio negocio = new ActividadNegocio();
@@ -144,9 +147,19 @@ namespace Presentacion
 
             try
             {
+                lblErrorActividad.Visible = false;
+
                 if (dgvActividades.SelectedIndex != -1)
                 {
                     int id = int.Parse(dgvActividades.SelectedDataKey.Value.ToString());
+
+                    if (negocio.tieneHorariosActivos(id))
+                    {
+                        lblErrorActividad.Text = "No se puede dar de baja la actividad porque tiene horarios activos asociados.";
+                        lblErrorActividad.Visible = true;
+                        return;
+                    }
+
                     negocio.eliminarLogico(id);
 
                     cargarGrilla();
@@ -200,6 +213,9 @@ namespace Presentacion
 
             lblErrorNombre.Text = string.Empty;
             lblErrorNombre.Visible = false;
+
+            lblErrorActividad.Text = string.Empty;
+            lblErrorActividad.Visible = false;
 
             dgvActividades.SelectedIndex = -1;
         }
