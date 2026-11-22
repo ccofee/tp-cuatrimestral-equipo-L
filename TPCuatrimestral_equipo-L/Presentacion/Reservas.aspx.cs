@@ -144,6 +144,14 @@ namespace Presentacion
                 lblMensajeReserva.Visible = true;
                 return;
             }
+            // evita reservar fechas pasadas
+            if (fechaClase.Date < DateTime.Today)
+            {
+                lblMensajeReserva.Text = "No podes reservar una fecha pasada.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
 
             AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
             Alumno alumno;
@@ -224,6 +232,31 @@ namespace Presentacion
 
             if (horario == null)
                 return;
+            // valida que la fecha corresponda al dia del horario
+            int diaFecha;
+
+            if (fechaClase.DayOfWeek == DayOfWeek.Sunday)
+                diaFecha = 7;
+            else
+                diaFecha = (int)fechaClase.DayOfWeek;
+
+            if (diaFecha != horario.DiaSemana)
+            {
+                lblMensajeReserva.Text = "La fecha seleccionada no corresponde al dia del horario.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
+            // valida que la clase todavia no haya comenzado
+            DateTime fechaHoraClase = fechaClase.Date + horario.HoraInicio;
+
+            if (fechaHoraClase <= DateTime.Now)
+            {
+                lblMensajeReserva.Text = "No podes reservar una clase que ya comenzo.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
 
             ReservaNegocio negocioReserva = new ReservaNegocio();
 
