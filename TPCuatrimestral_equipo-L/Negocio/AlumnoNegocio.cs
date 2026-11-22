@@ -23,7 +23,8 @@ namespace Negocio
                                            A.FechaVencimientoPlan, A.FechaAlta, A.Activo 
                                     FROM ALUMNOS A 
                                     INNER JOIN PLANES P ON A.IdPlan = P.Id 
-                                    WHERE A.Activo = 1";
+                                    WHERE A.Activo = 1
+                                    ORDER BY A.Apellido, A.Nombre";
 
                 datos.SetearConsulta(consulta);
                 datos.EjecutarLectura();

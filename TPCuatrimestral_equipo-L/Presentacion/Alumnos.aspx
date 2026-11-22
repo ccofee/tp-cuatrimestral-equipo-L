@@ -1,6 +1,44 @@
 ﻿<%@ Page Title="Alumnos" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Alumnos.aspx.cs" Inherits="Presentacion.Alumnos" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .validacion {
+            color: red;
+            font-size: 12px;
+        }
+
+        .table-responsive table th,
+        .table-responsive table td {
+            white-space: nowrap;
+        }
+
+        .chk-atrasado input[type="checkbox"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 17px;
+            height: 17px;
+            border: 2px solid #6c757d;
+            border-radius: 3px;
+            background-color: #ffffff;
+            vertical-align: middle;
+            position: relative;
+        }
+
+            .chk-atrasado input[type="checkbox"]:checked {
+                background-color: #dc3545;
+                border-color: #dc3545;
+            }
+
+                .chk-atrasado input[type="checkbox"]:checked::after {
+                    content: "✓";
+                    color: #ffffff;
+                    font-size: 13px;
+                    font-weight: bold;
+                    position: absolute;
+                    top: -3px;
+                    left: 2px;
+                }
+    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -14,44 +52,6 @@
 
     <div class="row">
 
-        <style>
-            .validacion {
-                color: red;
-                font-size: 12px;
-            }
-
-            .table-responsive table th,
-            .table-responsive table td {
-                white-space: nowrap;
-            }
-
-            .chk-atrasado input[type="checkbox"] {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 17px;
-                height: 17px;
-                border: 2px solid #6c757d;
-                border-radius: 3px;
-                background-color: #ffffff;
-                vertical-align: middle;
-                position: relative;
-            }
-
-                .chk-atrasado input[type="checkbox"]:checked {
-                    background-color: #dc3545;
-                    border-color: #dc3545;
-                }
-
-                    .chk-atrasado input[type="checkbox"]:checked::after {
-                        content: "✓";
-                        color: #ffffff;
-                        font-size: 13px;
-                        font-weight: bold;
-                        position: absolute;
-                        top: -3px;
-                        left: 2px;
-                    }
-        </style>
 
         <div class="col-md-4">
             <!-- DNI obligatorio y 7 u 8 digitos -->
