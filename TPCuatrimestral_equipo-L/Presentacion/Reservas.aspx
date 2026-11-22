@@ -11,12 +11,17 @@
             <div class="card-body">
 
                 <div class="row mb-3">
-
+                <asp:PlaceHolder ID="phAlumnoAdmin" runat="server" Visible="false">
                     <div class="col-md-3">
                         <label>Alumno</label>
-                        <asp:TextBox ID="txtAlumno" runat="server" CssClass="form-control" />
+                        <asp:DropDownList
+                    ID="ddlAlumno"
+                    runat="server"
+                    CssClass="form-select">
+                   <asp:ListItem Text="-- Seleccione un alumno --" Value="0" />
+                    </asp:DropDownList>
                     </div>
-
+                    </asp:PlaceHolder>
                     <div class="col-md-3">
                             <label>Actividad</label>
 
@@ -82,6 +87,11 @@
             DataKeyNames="Id">
 
             <Columns>
+               <asp:TemplateField HeaderText="Alumno">
+                  <ItemTemplate>
+                       <%# Eval("Alumno.Nombre") %> <%# Eval("Alumno.Apellido") %>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="Actividad">
                     <ItemTemplate>
                         <%# Eval("Horario.Actividad.Nombre") %>

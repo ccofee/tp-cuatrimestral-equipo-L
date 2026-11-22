@@ -15,13 +15,22 @@ namespace Presentacion
     {
 
         /// <summary>
-        /// Control txtAlumno.
+        /// Control phAlumnoAdmin.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAlumno;
+        protected global::System.Web.UI.WebControls.PlaceHolder phAlumnoAdmin;
+
+        /// <summary>
+        /// Control ddlAlumno.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlAlumno;
 
         /// <summary>
         /// Control ddlActividad.

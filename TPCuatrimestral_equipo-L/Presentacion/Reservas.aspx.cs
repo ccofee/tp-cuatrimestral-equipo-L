@@ -20,10 +20,16 @@ namespace Presentacion
                 Response.Redirect("Login.aspx");
                 return;
             }
-
+            dgvReservas.Columns[0].Visible = usuarioLogueado.Rol == 1;
+           
             if (!IsPostBack)
             {
                 CargarActividades();
+                if (usuarioLogueado.Rol == 1)
+                {
+                    phAlumnoAdmin.Visible = true;
+                    CargarAlumnos();
+                }
                 CargarReservas();
             }
         }
@@ -36,6 +42,15 @@ namespace Presentacion
             ddlActividad.DataValueField = "Id";
             ddlActividad.DataBind();
         }
+        private void CargarAlumnos()
+        {
+            AlumnoNegocio negocio = new AlumnoNegocio();
+
+            ddlAlumno.DataSource = negocio.listar();
+            ddlAlumno.DataTextField = "Nombre";
+            ddlAlumno.DataValueField = "Id";
+            ddlAlumno.DataBind();
+        }
         private void CargarReservas()
         {
             Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
@@ -43,14 +58,23 @@ namespace Presentacion
             if (usuarioLogueado == null)
                 return;
 
+            ReservaNegocio negocio = new ReservaNegocio();
+            List<Reserva> reservas = negocio.Listar();
+
+            // el admin ve todas las reservas
+            if (usuarioLogueado.Rol == 1)
+            {
+                dgvReservas.DataSource = reservas;
+                dgvReservas.DataBind();
+                return;
+            }
+
+            // el alumno ve solamente sus reservas
             AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
             Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
 
             if (alumno == null)
                 return;
-
-            ReservaNegocio negocio = new ReservaNegocio();
-            List<Reserva> reservas = negocio.Listar();
 
             dgvReservas.DataSource = reservas.Where(x => x.Alumno.Id == alumno.Id).ToList();
             dgvReservas.DataBind();
@@ -122,7 +146,26 @@ namespace Presentacion
             }
 
             AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
-            Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+            Alumno alumno;
+
+            if (usuarioLogueado.Rol == 1)
+            {
+                if (ddlAlumno.SelectedValue == "0")
+                {
+                    lblMensajeReserva.Text = "Selecciona un alumno.";
+                    lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                    lblMensajeReserva.Visible = true;
+                    return;
+                }
+
+                int idAlumno = int.Parse(ddlAlumno.SelectedValue);
+
+                alumno = alumnoNegocio.listar().Find(x => x.Id == idAlumno);
+            }
+            else
+            {
+                alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+            }
 
             if (alumno == null)
             {
@@ -311,24 +354,27 @@ namespace Presentacion
                 return;
             }
 
-            AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
-            Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
-
-            if (alumno == null)
+            // si no es admin verifica que la reserva sea del alumno
+            if (usuarioLogueado.Rol != 1)
             {
-                lblMensajeReserva.Text = "No se encontro un alumno asociado a este usuario.";
-                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
-                lblMensajeReserva.Visible = true;
-                return;
-            }
+                AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+                Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
 
-            // verifica que la reserva sea del alumno
-            if (reserva.Alumno.Id != alumno.Id)
-            {
-                lblMensajeReserva.Text = "No podes cancelar una reserva de otro alumno.";
-                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
-                lblMensajeReserva.Visible = true;
-                return;
+                if (alumno == null)
+                {
+                    lblMensajeReserva.Text = "No se encontro un alumno asociado a este usuario.";
+                    lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                    lblMensajeReserva.Visible = true;
+                    return;
+                }
+
+                if (reserva.Alumno.Id != alumno.Id)
+                {
+                    lblMensajeReserva.Text = "No podes cancelar una reserva de otro alumno.";
+                    lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                    lblMensajeReserva.Visible = true;
+                    return;
+                }
             }
 
             // arma la fecha y hora de la clase
