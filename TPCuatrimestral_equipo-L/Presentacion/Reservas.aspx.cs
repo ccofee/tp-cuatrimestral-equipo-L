@@ -213,6 +213,42 @@ namespace Presentacion
                 nueva.Estado = "Reservada";
 
             int idReserva = negocioReserva.Agregar(nueva);
+            // envia el mail de la reserva
+            if (!string.IsNullOrEmpty(alumno.Email))
+            {
+                EmailService servicioMail = new EmailService();
+
+                string asunto;
+                string cuerpo;
+
+                if (nueva.Estado == "Reservada")
+                {
+                    asunto = "Reserva confirmada - GymConnect";
+
+                    cuerpo = "Hola " + alumno.Nombre + ",\n\n" +
+                             "Tu reserva fue confirmada.\n" +
+                             "Actividad: " + horario.Actividad.Nombre + "\n" +
+                             "Fecha: " + fechaClase.ToString("dd/MM/yyyy") + "\n" +
+                             "Horario: " + horario.HoraInicio.ToString(@"hh\:mm") +
+                             " a " + horario.HoraFin.ToString(@"hh\:mm") + "\n\n" +
+                             "GymConnect";
+                }
+                else
+                {
+                    asunto = "Reserva en espera - GymConnect";
+
+                    cuerpo = "Hola " + alumno.Nombre + ",\n\n" +
+                             "El horario elegido no tiene cupo disponible.\n" +
+                             "Quedaste en lista de espera.\n" +
+                             "Actividad: " + horario.Actividad.Nombre + "\n" +
+                             "Fecha: " + fechaClase.ToString("dd/MM/yyyy") + "\n" +
+                             "Horario: " + horario.HoraInicio.ToString(@"hh\:mm") +
+                             " a " + horario.HoraFin.ToString(@"hh\:mm") + "\n\n" +
+                             "GymConnect";
+                }
+
+                servicioMail.EnviarMail(alumno.Email, asunto, cuerpo);
+            }
             if (nueva.Estado == "Reservada")
             {
                 lblMensajeReserva.Text = "Reserva realizada correctamente.";
