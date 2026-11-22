@@ -30,6 +30,7 @@ namespace Presentacion
             if (!IsPostBack)
             {
                 cargarGrilla();
+                btnEliminar.Enabled = false;
             }
 
         }
@@ -63,6 +64,8 @@ namespace Presentacion
             try
             {
                 lblErrorNombre.Visible = false;
+                lblErrorActividad.Visible = false;
+                lblMensaje.Visible = false;
 
                 Page.Validate();
                 if (!Page.IsValid)
@@ -74,7 +77,9 @@ namespace Presentacion
                 actividad.Nombre = txtNombre.Text;
                 actividad.Descripcion = txtDescripcion.Text;
 
-                if (dgvActividades.SelectedIndex == -1)
+                bool esAlta = (dgvActividades.SelectedIndex == -1);
+
+                if (esAlta)
                 {
                     if (negocio.existeNombre(actividad.Nombre))
                     {
@@ -103,6 +108,13 @@ namespace Presentacion
                 cargarGrilla();
                 limpiarCampos();
 
+                if (esAlta)
+                    lblMensaje.Text = "Actividad agregada correctamente.";
+                else
+                    lblMensaje.Text = "Actividad modificada correctamente.";
+
+                lblMensaje.Visible = true;
+
             }
             catch (Exception ex)
             {
@@ -117,6 +129,9 @@ namespace Presentacion
             try
             {
                 lblErrorNombre.Visible = false;
+                lblErrorActividad.Visible = false;
+                lblMensaje.Visible = false;
+
                 int idSeleccionado = int.Parse(dgvActividades.SelectedDataKey.Value.ToString());
 
                 ActividadNegocio negocio = new ActividadNegocio();
@@ -126,6 +141,7 @@ namespace Presentacion
                 {
                     txtNombre.Text = seleccionada.Nombre;
                     txtDescripcion.Text = seleccionada.Descripcion;
+                    btnEliminar.Enabled = true;
                 }
             }
 
@@ -144,13 +160,27 @@ namespace Presentacion
 
             try
             {
+                lblErrorActividad.Visible = false;
+                lblMensaje.Visible = false;
+
                 if (dgvActividades.SelectedIndex != -1)
                 {
                     int id = int.Parse(dgvActividades.SelectedDataKey.Value.ToString());
+
+                    if (negocio.tieneHorariosActivos(id))
+                    {
+                        lblErrorActividad.Text = "No se puede dar de baja la actividad porque tiene horarios activos asociados.";
+                        lblErrorActividad.Visible = true;
+                        return;
+                    }
+
                     negocio.eliminarLogico(id);
 
                     cargarGrilla();
                     limpiarCampos();
+
+                    lblMensaje.Text = "Actividad dada de baja correctamente.";
+                    lblMensaje.Visible = true;
                 }
             }
             catch (Exception ex)
@@ -178,8 +208,9 @@ namespace Presentacion
                     x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper())
                 );
 
-
+                limpiarFormulario();
                 dgvActividades.SelectedIndex = -1;
+                btnEliminar.Enabled = false;
                 dgvActividades.DataSource = listaFiltrada;
                 dgvActividades.DataBind();
 
@@ -191,16 +222,27 @@ namespace Presentacion
             }
         }
 
-        private void limpiarCampos()
+        private void limpiarFormulario()
         {
-
             txtNombre.Text = string.Empty;
             txtDescripcion.Text = string.Empty;
-            txtFiltro.Text = string.Empty;
 
             lblErrorNombre.Text = string.Empty;
             lblErrorNombre.Visible = false;
 
+            lblErrorActividad.Text = string.Empty;
+            lblErrorActividad.Visible = false;
+
+            lblMensaje.Text = string.Empty;
+            lblMensaje.Visible = false;
+        }
+
+        private void limpiarCampos()
+        {
+            limpiarFormulario();
+            txtFiltro.Text = string.Empty;
+
+            btnEliminar.Enabled = false;
             dgvActividades.SelectedIndex = -1;
         }
 

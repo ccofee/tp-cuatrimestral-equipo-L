@@ -75,7 +75,7 @@ namespace Presentacion
         {
             try
             {
-
+                lblErrorDni.Visible = false;
                 lblMensaje.Visible = false;
                 int idSeleccionado = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
 
@@ -153,7 +153,8 @@ namespace Presentacion
                  (estado == "Atrasado" && x.Atrasado))
             );
 
-            //desmarco si habia algun alumno seleccionado
+            //desmarco si habia algun alumno seleccionado y limpio los campos cargados
+            limpiarFormulario();
             dgvAlumnos.SelectedIndex = -1;
             btnEliminar.Enabled = false;
             btnRenovar.Enabled = false;
@@ -214,6 +215,14 @@ namespace Presentacion
                 else
                 {
                     alumno.Id = int.Parse(dgvAlumnos.SelectedDataKey.Value.ToString());
+
+                    if (negocio.existeDni(alumno.DNI, alumno.Id))
+                    {
+                        lblErrorDni.Text = "El DNI ingresado ya pertenece a otro alumno.";
+                        lblErrorDni.Visible = true;
+                        return;
+                    }
+
                     negocio.modificar(alumno);
                 }
 
@@ -242,7 +251,7 @@ namespace Presentacion
             dgvAlumnos.DataBind();
         }
 
-        private void limpiarCampos()
+        private void limpiarFormulario()
         {
             txtDni.Text = string.Empty;
             txtNombre.Text = string.Empty;
@@ -251,19 +260,23 @@ namespace Presentacion
             txtTelefono.Text = string.Empty;
             txtFechaNacimiento.Text = string.Empty;
             txtFechaVencimiento.Text = string.Empty;
-            txtFiltro.Text = string.Empty;
 
             if (ddlPlan.Items.Count > 0)
                 ddlPlan.SelectedIndex = 0;
 
-            if (ddlEstado.Items.Count > 0)
-                ddlEstado.SelectedIndex = 0;
-
-            //limpieza de DNI y mensaje
             lblErrorDni.Text = string.Empty;
             lblErrorDni.Visible = false;
             lblMensaje.Text = string.Empty;
             lblMensaje.Visible = false;
+        }
+
+        private void limpiarCampos()
+        {
+            limpiarFormulario();
+            txtFiltro.Text = string.Empty;
+
+            if (ddlEstado.Items.Count > 0)
+                ddlEstado.SelectedIndex = 0;
 
             //deshabilito botones de seleccion
             btnEliminar.Enabled = false;
