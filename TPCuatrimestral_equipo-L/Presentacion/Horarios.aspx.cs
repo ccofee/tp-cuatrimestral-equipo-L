@@ -25,8 +25,10 @@ namespace Presentacion
             }
 
             if (!IsPostBack)
+            {
                 CargarActividades();
                 CargarGrilla();
+            }
         }
 
         protected void dgvHorarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -191,7 +193,28 @@ namespace Presentacion
             dgvHorarios.DataSource = negocio.Listar();
             dgvHorarios.DataBind();
         }
-
+        protected string ObtenerNombreDia(int dia)
+        {
+            switch (dia)
+            {
+                case 1:
+                    return "Lunes";
+                case 2:
+                    return "Martes";
+                case 3:
+                    return "Miercoles";
+                case 4:
+                    return "Jueves";
+                case 5:
+                    return "Viernes";
+                case 6:
+                    return "Sabado";
+                case 7:
+                    return "Domingo";
+                default:
+                    return "";
+            }
+        }
         private void LimpiarFormulario()
         {
             ddlActividad.SelectedIndex = 0;

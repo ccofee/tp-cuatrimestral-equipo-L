@@ -65,9 +65,15 @@
                     CssClass="btn btn-danger" 
                     OnClick="btnCancelarReserva_Click"/>
 
+                <asp:Label
+                    ID="lblMensajeReserva"
+                    runat="server"
+                    CssClass="d-block mt-3"
+                    Visible="false">
+                </asp:Label>
             </div>
         </div>
-
+                
         <asp:GridView
             ID="dgvReservas"
             runat="server"
@@ -101,6 +107,8 @@
 
                 <asp:CommandField ShowSelectButton="True" SelectText="Seleccionar" />
             </Columns>
+            
+            <SelectedRowStyle CssClass="table-primary fw-semibold" />
 
         </asp:GridView>
 

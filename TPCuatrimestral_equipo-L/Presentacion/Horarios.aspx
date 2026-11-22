@@ -95,11 +95,25 @@
             OnSelectedIndexChanged="dgvHorarios_SelectedIndexChanged">
 
             <Columns>
-                <asp:BoundField DataField="DiaSemana" HeaderText="Día" />
-                <asp:BoundField DataField="HoraInicio" HeaderText="Hora inicio" />
-                <asp:BoundField DataField="HoraFin" HeaderText="Hora fin" />
                 <asp:BoundField DataField="CupoMaximo" HeaderText="Cupo máximo" />
                 <asp:BoundField DataField="Actividad" HeaderText="Actividad" />
+                <asp:TemplateField HeaderText="Dia">
+                <ItemTemplate>
+                    <%# ObtenerNombreDia(Convert.ToInt32(Eval("DiaSemana"))) %>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Hora inicio">
+                <ItemTemplate>
+                    <%# ((TimeSpan)Eval("HoraInicio")).ToString(@"hh\:mm") %>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+            <asp:TemplateField HeaderText="Hora fin">
+                <ItemTemplate>
+                    <%# ((TimeSpan)Eval("HoraFin")).ToString(@"hh\:mm") %>
+                </ItemTemplate>
+            </asp:TemplateField>
             </Columns>
 
         </asp:GridView>
