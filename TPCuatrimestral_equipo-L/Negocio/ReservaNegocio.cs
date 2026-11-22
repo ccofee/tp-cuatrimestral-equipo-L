@@ -242,31 +242,53 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
-        public void PromoverPrimeroEnEspera(int idHorario, DateTime fechaClase)
+        public int PromoverPrimeroEnEspera(int idHorario, DateTime fechaClase)
         {
-            AccesoDatos datos = new AccesoDatos();
+            AccesoDatos datosLectura = new AccesoDatos();
 
             try
             {
-                datos.SetearConsulta(@"UPDATE RESERVAS
-                              SET Estado = 'Reservada'
-                              WHERE Id = (
-                                  SELECT TOP 1 Id
-                                  FROM RESERVAS
-                                  WHERE IdHorario = @idHorario
-                                  AND FechaClase = @fechaClase
-                                  AND Estado = 'EnEspera'
-                                  ORDER BY FechaAlta
-                              )");
+                datosLectura.SetearConsulta(@"SELECT TOP 1 Id
+                                     FROM RESERVAS
+                                     WHERE IdHorario = @idHorario
+                                     AND FechaClase = @fechaClase
+                                     AND Estado = 'EnEspera'
+                                     ORDER BY FechaAlta");
 
-                datos.SetearParametro("@idHorario", idHorario);
-                datos.SetearParametro("@fechaClase", fechaClase);
+                datosLectura.SetearParametro("@idHorario", idHorario);
+                datosLectura.SetearParametro("@fechaClase", fechaClase);
 
-                datos.EjecutarAccion();
+                datosLectura.EjecutarLectura();
+
+                if (!datosLectura.Lector.Read())
+                    return 0;
+
+                int idReserva = (int)datosLectura.Lector["Id"];
+
+                datosLectura.CerrarConexion();
+
+                AccesoDatos datosActualizacion = new AccesoDatos();
+
+                try
+                {
+                    datosActualizacion.SetearConsulta(@"UPDATE RESERVAS
+                                                SET Estado = 'Reservada'
+                                                WHERE Id = @idReserva");
+
+                    datosActualizacion.SetearParametro("@idReserva", idReserva);
+
+                    datosActualizacion.EjecutarAccion();
+
+                    return idReserva;
+                }
+                finally
+                {
+                    datosActualizacion.CerrarConexion();
+                }
             }
             finally
             {
-                datos.CerrarConexion();
+                datosLectura.CerrarConexion();
             }
         }
     }

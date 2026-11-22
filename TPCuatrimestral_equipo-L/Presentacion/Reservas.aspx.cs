@@ -98,7 +98,7 @@ namespace Presentacion
                 {
                     ListItem item = new ListItem();
 
-                    item.Text = horario.DiaSemana + " - " +
+                    item.Text = ObtenerNombreDia(horario.DiaSemana) + " - " +
                                 horario.HoraInicio.ToString(@"hh\:mm") + " a " +
                                 horario.HoraFin.ToString(@"hh\:mm");
 
@@ -398,14 +398,53 @@ namespace Presentacion
 
 
             // si libero un cupo busca al primero en espera
+            int idReservaPromovida = 0;
             if (liberaCupo)
             {
-                reservaNegocio.PromoverPrimeroEnEspera(
+                idReservaPromovida = reservaNegocio.PromoverPrimeroEnEspera(
                     reserva.Horario.Id,
                     reserva.FechaClase
                 );
             }
-           // mensaje
+            // avisa por mail si alguien obtuvo el cupo
+            if (idReservaPromovida > 0)
+            {
+                Reserva reservaPromovida = reservaNegocio.BuscarPorId(idReservaPromovida);
+
+                if (reservaPromovida != null)
+                {
+                    AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+                    List<Alumno> alumnos = alumnoNegocio.listar();
+
+                    Alumno alumnoPromovido = alumnos.Find(
+                        x => x.Id == reservaPromovida.Alumno.Id
+                    );
+
+                    if (alumnoPromovido != null &&
+                        !string.IsNullOrEmpty(alumnoPromovido.Email))
+                    {
+                        EmailService servicioMail = new EmailService();
+
+                        string asunto = "Tu reserva fue confirmada - GymConnect";
+
+                        string cuerpo =
+                            "Hola " + alumnoPromovido.Nombre + ",\n\n" +
+                            "Se libero un cupo y tu reserva fue confirmada.\n" +
+                            "Actividad: " + reservaPromovida.Horario.Actividad.Nombre + "\n" +
+                            "Fecha: " + reservaPromovida.FechaClase.ToString("dd/MM/yyyy") + "\n" +
+                            "Horario: " + reservaPromovida.Horario.HoraInicio.ToString(@"hh\:mm") +
+                            " a " + reservaPromovida.Horario.HoraFin.ToString(@"hh\:mm") + "\n\n" +
+                            "GymConnect";
+
+                        servicioMail.EnviarMail(
+                            alumnoPromovido.Email,
+                            asunto,
+                            cuerpo
+                        );
+                    }
+                }
+            }
+            // mensaje
             lblMensajeReserva.Text = "Reserva cancelada correctamente.";
             lblMensajeReserva.CssClass = "d-block mt-3 text-success";
             lblMensajeReserva.Visible = true;
@@ -414,6 +453,28 @@ namespace Presentacion
             CargarReservas();
 
             dgvReservas.SelectedIndex = -1;
+        }
+        private string ObtenerNombreDia(int dia)
+        {
+            switch (dia)
+            {
+                case 1:
+                    return "Lunes";
+                case 2:
+                    return "Martes";
+                case 3:
+                    return "Miercoles";
+                case 4:
+                    return "Jueves";
+                case 5:
+                    return "Viernes";
+                case 6:
+                    return "Sabado";
+                case 7:
+                    return "Domingo";
+                default:
+                    return "";
+            }
         }
     }
 }
