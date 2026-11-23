@@ -85,24 +85,27 @@ namespace Negocio
             }
         }
 
-        public void BajaLogica(int id)
+        public bool TieneAlumnosActivos(int idPlan)
         {
-            AccesoDatos consulta = new AccesoDatos();
-            bool hayAlumnosActivos;
+            AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                consulta.SetearConsulta("SELECT Id FROM ALUMNOS WHERE Activo = 1 AND IdPlan = @id");
-                consulta.SetearParametro("@id", id);
-                consulta.EjecutarLectura();
-                hayAlumnosActivos = consulta.Lector.Read();
+                datos.SetearConsulta("SELECT Id FROM ALUMNOS WHERE Activo = 1 AND IdPlan = @id");
+                datos.SetearParametro("@id", idPlan);
+                datos.EjecutarLectura();
+
+                return datos.Lector.Read();
             }
             finally
             {
-                consulta.CerrarConexion();
+                datos.CerrarConexion();
             }
+        }
 
-            if (hayAlumnosActivos)
+        public void BajaLogica(int id)
+        {
+            if (TieneAlumnosActivos(id))
                 throw new Exception("No se puede dar de baja el plan: tiene alumnos activos asociados.");
 
             AccesoDatos datos = new AccesoDatos();

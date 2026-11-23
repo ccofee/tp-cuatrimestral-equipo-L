@@ -75,6 +75,13 @@ namespace Presentacion
                 return;
             }
 
+            if (!plan.IncluyeMusculacion && !plan.IncluyeClases)
+            {
+                lblErrorPlan.Text = "El plan debe incluir al menos musculación o clases grupales.";
+                lblErrorPlan.Visible = true;
+                return;
+            }
+
             PlanNegocio negocio = new PlanNegocio();
 
             //alta o modificacion de un plan
@@ -103,11 +110,20 @@ namespace Presentacion
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
             //baja logica de un plan
+            lblErrorPlan.Visible = false;
+
             if (dgvPlanes.SelectedIndex == -1)
                 return;
 
             int id = int.Parse(dgvPlanes.SelectedDataKey.Value.ToString());
             PlanNegocio negocio = new PlanNegocio();
+
+            if (negocio.TieneAlumnosActivos(id))
+            {
+                lblErrorPlan.Text = "No se puede dar de baja el plan: tiene alumnos activos asociados.";
+                lblErrorPlan.Visible = true;
+                return;
+            }
 
             try
             {

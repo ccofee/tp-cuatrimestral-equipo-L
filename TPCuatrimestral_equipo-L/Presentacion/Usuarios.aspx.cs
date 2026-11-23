@@ -91,6 +91,14 @@ namespace Presentacion
                 else
                 {
                     usuario.Id = int.Parse(dgvUsuarios.SelectedDataKey.Value.ToString());
+
+                    if (negocio.ExisteEmail(usuario.Email, usuario.Id))
+                    {
+                        lblErrorUsuario.Text = "El email ingresado ya está registrado.";
+                        lblErrorUsuario.Visible = true;
+                        return;
+                    }
+
                     negocio.Modificar(usuario);
 
                     if (!string.IsNullOrWhiteSpace(txtClave.Text))
@@ -121,10 +129,22 @@ namespace Presentacion
 
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
+            lblErrorUsuario.Visible = false;
+
             if (dgvUsuarios.SelectedIndex == -1)
                 return;
 
             int id = int.Parse(dgvUsuarios.SelectedDataKey.Value.ToString());
+
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado != null && usuarioLogueado.Id == id)
+            {
+                lblErrorUsuario.Text = "No podés dar de baja tu propio usuario.";
+                lblErrorUsuario.Visible = true;
+                return;
+            }
+
             UsuarioNegocio negocio = new UsuarioNegocio();
 
             try

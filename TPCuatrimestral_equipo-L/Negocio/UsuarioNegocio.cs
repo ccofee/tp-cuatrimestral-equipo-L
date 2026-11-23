@@ -196,6 +196,20 @@ namespace Negocio
             {
                 datos.CerrarConexion();
             }
+
+            //desvincula al alumno (si lo hubiera) para que pueda vincularse a un usuario nuevo mas adelante
+            AccesoDatos desvincular = new AccesoDatos();
+
+            try
+            {
+                desvincular.SetearConsulta("UPDATE ALUMNOS SET IdUsuario = NULL WHERE IdUsuario = @id");
+                desvincular.SetearParametro("@id", id);
+                desvincular.EjecutarAccion();
+            }
+            finally
+            {
+                desvincular.CerrarConexion();
+            }
         }
 
         public Usuario BuscarPorId(int id)
@@ -290,6 +304,25 @@ namespace Negocio
             {
                 datos.SetearConsulta("SELECT Id FROM USUARIOS WHERE Email = @email");
                 datos.SetearParametro("@email", email);
+                datos.EjecutarLectura();
+
+                return datos.Lector.Read();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public bool ExisteEmail(string email, int idExcluir)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT Id FROM USUARIOS WHERE Email = @email AND Id != @id");
+                datos.SetearParametro("@email", email);
+                datos.SetearParametro("@id", idExcluir);
                 datos.EjecutarLectura();
 
                 return datos.Lector.Read();

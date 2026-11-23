@@ -30,6 +30,7 @@ namespace Presentacion
 
             if (usuario.DebeCambiarClave)
             {
+                Session.Remove("UsuarioLogueado");
                 Session["UsuarioPendienteCambioClave"] = usuario;
                 Response.Redirect("CambiarClave.aspx");
                 return;

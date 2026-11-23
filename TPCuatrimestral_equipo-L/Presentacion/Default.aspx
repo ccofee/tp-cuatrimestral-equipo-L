@@ -55,7 +55,7 @@
                     <asp:BoundField DataField="DNI" HeaderText="DNI" />
                     <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
                     <asp:BoundField DataField="Apellido" HeaderText="Apellido" />
-                    <asp:BoundField DataField="Plan.Descripcion" HeaderText="Plan" />
+                    <asp:BoundField DataField="Plan" HeaderText="Plan" />
                     <asp:BoundField DataField="FechaVencimientoPlan" HeaderText="Vencimiento" DataFormatString="{0:dd/MM/yyyy}" />
                     <asp:BoundField DataField="Antiguedad" HeaderText="Antigüedad" />
                 </Columns>

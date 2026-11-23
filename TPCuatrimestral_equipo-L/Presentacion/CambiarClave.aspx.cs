@@ -12,7 +12,10 @@ namespace Presentacion
             Usuario usuarioPendiente = Session["UsuarioPendienteCambioClave"] as Usuario;
 
             if (usuarioPendiente == null)
+            {
                 Response.Redirect("Login.aspx");
+                return;
+            }
         }
 
         protected void btnGuardar_Click(object sender, EventArgs e)
