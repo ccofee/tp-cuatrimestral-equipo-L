@@ -51,6 +51,15 @@ namespace Presentacion
         protected global::System.Web.UI.WebControls.DropDownList ddlPeriodo;
 
         /// <summary>
+        /// Control ddlPlan.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlPlan;
+
+        /// <summary>
         /// Control btnLimpiar.
         /// </summary>
         /// <remarks>

@@ -30,6 +30,7 @@ namespace Presentacion
             if (!IsPostBack)
             {
                 cargarGrilla();
+                cargarPlanes();
             }
         }
 
@@ -41,7 +42,26 @@ namespace Presentacion
             {
                 List<Pago> lista = negocio.listar();
                 Session.Add("listaPagos", lista);
+
                 enlazarGrillaYResumen(lista);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+        private void cargarPlanes()
+        {
+            PlanNegocio negocio = new PlanNegocio();
+
+            try
+            {
+                ddlPlan.DataSource = negocio.Listar();
+                ddlPlan.DataTextField = "Descripcion";
+                ddlPlan.DataValueField = "Id";
+                ddlPlan.DataBind();
             }
             catch (Exception ex)
             {
@@ -76,11 +96,26 @@ namespace Presentacion
             }
         }
 
+        protected void ddlPlan_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                aplicarFiltros();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
         private void aplicarFiltros()
         {
             List<Pago> lista = (List<Pago>)Session["listaPagos"];
+
             string filtro = txtFiltro.Text.ToUpper();
             string periodo = ddlPeriodo.SelectedValue;
+            int idPlan = int.Parse(ddlPlan.SelectedValue);
 
             List<Pago> listaFiltrada = lista.FindAll(x =>
                 (x.AlumnoDNI.ToUpper().Contains(filtro) ||
@@ -88,7 +123,8 @@ namespace Presentacion
                 (periodo == "Todos" ||
                  (periodo == "Hoy" && x.FechaPago.Date == DateTime.Today) ||
                  (periodo == "7Dias" && x.FechaPago.Date >= DateTime.Today.AddDays(-7)) ||
-                 (periodo == "MesActual" && x.FechaPago.Month == DateTime.Today.Month && x.FechaPago.Year == DateTime.Today.Year))
+                 (periodo == "MesActual" && x.FechaPago.Month == DateTime.Today.Month && x.FechaPago.Year == DateTime.Today.Year)) &&
+                (idPlan == 0 || x.Alumno.Plan.Id == idPlan)
             );
 
             enlazarGrillaYResumen(listaFiltrada);
@@ -113,6 +149,7 @@ namespace Presentacion
         {
             txtFiltro.Text = string.Empty;
             ddlPeriodo.SelectedIndex = 0;
+            ddlPlan.SelectedIndex = 0;
 
             List<Pago> lista = (List<Pago>)Session["listaPagos"];
             enlazarGrillaYResumen(lista);
