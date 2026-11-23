@@ -15,8 +15,15 @@ namespace Presentacion
             if (!Page.IsValid)
                 return;
 
-            UsuarioNegocio negocio = new UsuarioNegocio();
-            negocio.RestablecerClave(txtEmail.Text.Trim());
+            try
+            {
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                negocio.RestablecerClave(txtEmail.Text.Trim());
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+            }
 
             lblMensaje.Text = "Si el email está registrado, te enviamos una contraseña provisoria.";
             lblMensaje.Visible = true;
