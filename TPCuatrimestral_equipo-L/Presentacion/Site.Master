@@ -23,6 +23,7 @@
                             <asp:PlaceHolder ID="phMenuAdmin" runat="server" Visible="false">
                                 <li class="nav-item"><a class="nav-link" href="Planes.aspx">Planes</a></li>
                                 <li class="nav-item"><a class="nav-link" href="Alumnos.aspx">Alumnos</a></li>
+                                <li class="nav-item"><a class="nav-link" href="Pagos.aspx">Pagos</a></li>
                                 <li class="nav-item"><a class="nav-link" href="Usuarios.aspx">Usuarios</a></li>
                                 <li class="nav-item"><a class="nav-link" href="Actividades.aspx">Actividades</a></li>
                                 <li class="nav-item"><a class="nav-link" href="Horarios.aspx">Horarios</a></li>
