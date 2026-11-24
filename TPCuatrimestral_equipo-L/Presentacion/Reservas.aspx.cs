@@ -21,7 +21,8 @@ namespace Presentacion
                 return;
             }
             dgvReservas.Columns[0].Visible = usuarioLogueado.Rol == 1;
-           
+            phFiltrosAdmin.Visible = usuarioLogueado.Rol == 1;
+            litTitulo.Text = usuarioLogueado.Rol == 1 ? "Reservas" : "Mis reservas";
             if (!IsPostBack)
             {
                 CargarActividades();
@@ -29,6 +30,7 @@ namespace Presentacion
                 {
                     phAlumnoAdmin.Visible = true;
                     CargarAlumnos();
+                    CargarFiltroActividades();
                 }
                 CargarReservas();
             }
@@ -61,27 +63,28 @@ namespace Presentacion
             ReservaNegocio negocio = new ReservaNegocio();
             List<Reserva> reservas = negocio.Listar();
 
-            // el admin ve todas las reservas
-            if (usuarioLogueado.Rol == 1)
+            // el alumno solo puede ver sus reservas
+            if (usuarioLogueado.Rol != 1)
             {
-                dgvReservas.DataSource = reservas;
-                dgvReservas.DataBind();
-                return;
+                AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+                Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+
+                if (alumno == null)
+                    reservas.Clear();
+                else
+                    reservas = reservas.FindAll(x => x.Alumno.Id == alumno.Id);
             }
 
-            // el alumno ve solamente sus reservas
-            AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
-            Alumno alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+            Session["ListaReservas"] = reservas;
+            dgvReservas.SelectedIndex = -1;
 
-            if (alumno == null)
-                return;
-
-            dgvReservas.DataSource = reservas.Where(x => x.Alumno.Id == alumno.Id).ToList();
-            dgvReservas.DataBind();
+            AplicarFiltros();
         }
         protected void ddlActividad_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlHorario.Items.Clear();
+            ddlFechaClase.Items.Clear();
+            ddlFechaClase.Items.Add(new ListItem("-- Seleccione una fecha --", ""));
             ddlHorario.Items.Add(new ListItem("-- Seleccione un horario --", "0"));
 
             if (ddlActividad.SelectedValue == "0")
@@ -137,7 +140,7 @@ namespace Presentacion
             
             DateTime fechaClase;
 
-            if (!DateTime.TryParse(txtFechaClase.Text, out fechaClase))
+            if (!DateTime.TryParse(ddlFechaClase.SelectedValue, out fechaClase))
             {
                 lblMensajeReserva.Text = "Selecciona una fecha valida.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
@@ -348,6 +351,14 @@ namespace Presentacion
             lblMensajeReserva.Visible = true;
             // actualiza la grilla
             CargarReservas();
+            // limpia los campos despues de reservar
+            ddlActividad.SelectedIndex = 0;
+
+            ddlHorario.Items.Clear();
+            ddlHorario.Items.Add(new ListItem("-- Seleccione un horario --", "0"));
+
+            ddlFechaClase.Items.Clear();
+            ddlFechaClase.Items.Add(new ListItem("-- Seleccione una fecha --", ""));
         }
         protected void btnCancelarReserva_Click(object sender, EventArgs e)
         {
@@ -512,18 +523,156 @@ namespace Presentacion
                 case 2:
                     return "Martes";
                 case 3:
-                    return "Miercoles";
+                    return "Miércoles";
                 case 4:
                     return "Jueves";
                 case 5:
                     return "Viernes";
                 case 6:
-                    return "Sabado";
+                    return "Sábado";
                 case 7:
                     return "Domingo";
                 default:
                     return "";
             }
+        }
+        protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarFechasDisponibles();
+        }
+
+        private void CargarFechasDisponibles()
+        {
+            ddlFechaClase.Items.Clear();
+            ddlFechaClase.Items.Add(new ListItem("-- Seleccione una fecha --", ""));
+
+            if (ddlHorario.SelectedValue == "0")
+                return;
+
+            HorarioNegocio negocio = new HorarioNegocio();
+            Horario horario = negocio.BuscarPorId(int.Parse(ddlHorario.SelectedValue));
+
+            if (horario == null)
+                return;
+
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+
+            if (usuarioLogueado == null)
+                return;
+
+            AlumnoNegocio alumnoNegocio = new AlumnoNegocio();
+            Alumno alumno;
+
+            if (usuarioLogueado.Rol == 1)
+            {
+                if (ddlAlumno.SelectedValue == "0")
+                    return;
+
+                alumno = alumnoNegocio.listar().Find(
+                    x => x.Id == int.Parse(ddlAlumno.SelectedValue));
+            }
+            else
+            {
+                alumno = alumnoNegocio.buscarPorIdUsuario(usuarioLogueado.Id);
+            }
+
+            if (alumno == null)
+                return;
+
+            DateTime fecha = DateTime.Today;
+            int cantidad = 0;
+
+            // busca las proximas cuatro fechas del horario
+            while (cantidad < 4 && fecha <= alumno.FechaVencimientoPlan.Date)
+            {
+                int dia = (int)fecha.DayOfWeek;
+
+                if (dia == 0)
+                    dia = 7;
+
+                if (dia == horario.DiaSemana &&
+                    fecha.Add(horario.HoraInicio) > DateTime.Now)
+                {
+                    ddlFechaClase.Items.Add(new ListItem(
+                        ObtenerNombreDia(dia) + " " + fecha.ToString("dd/MM/yyyy"),
+                        fecha.ToString("yyyy-MM-dd")));
+
+                    cantidad++;
+                }
+
+                fecha = fecha.AddDays(1);
+            }
+        }
+        protected void ddlAlumno_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarFechasDisponibles();
+        }
+        private void CargarFiltroActividades()
+        {
+            ActividadNegocio negocio = new ActividadNegocio();
+
+            ddlFiltroActividad.DataSource = negocio.listar();
+            ddlFiltroActividad.DataTextField = "Nombre";
+            ddlFiltroActividad.DataValueField = "Id";
+            ddlFiltroActividad.DataBind();
+        }
+        protected void Filtros_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dgvReservas.SelectedIndex = -1;
+            dgvReservas.PageIndex = 0;
+            lblMensajeReserva.Visible = false;
+            AplicarFiltros();
+        }
+        private void AplicarFiltros()
+        {
+            Usuario usuarioLogueado = Session["UsuarioLogueado"] as Usuario;
+            List<Reserva> reservas = Session["ListaReservas"] as List<Reserva>;
+
+            if (reservas == null || usuarioLogueado == null)
+                return;
+
+            // filtra por estado
+            if (ddlFiltroEstado.SelectedValue == "Activas")
+            {
+                reservas = reservas.FindAll(x =>
+                    x.Estado == "Reservada" || x.Estado == "EnEspera");
+            }
+            else if (ddlFiltroEstado.SelectedValue == "Cancelada")
+            {
+                reservas = reservas.FindAll(x => x.Estado == "Cancelada");
+            }
+
+            // filtros exclusivos del admin
+            if (usuarioLogueado.Rol == 1)
+            {
+                if (ddlFiltroActividad.SelectedValue != "0")
+                {
+                    int idActividad = int.Parse(ddlFiltroActividad.SelectedValue);
+
+                    reservas = reservas.FindAll(x =>
+                        x.Horario.Actividad.Id == idActividad);
+                }
+
+                DateTime fecha;
+
+                if (DateTime.TryParse(txtFiltroFecha.Text, out fecha))
+                {
+                    reservas = reservas.FindAll(x =>
+                        x.FechaClase.Date == fecha.Date);
+                }
+            }
+
+            dgvReservas.DataSource = reservas
+                .OrderBy(x => x.FechaClase)
+                .ThenBy(x => x.Horario.HoraInicio)
+                .ToList();
+            dgvReservas.DataBind();
+        }
+        protected void dgvReservas_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            dgvReservas.SelectedIndex = -1;
+            dgvReservas.PageIndex = e.NewPageIndex;
+            AplicarFiltros();
         }
     }
 }

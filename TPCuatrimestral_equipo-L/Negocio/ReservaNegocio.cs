@@ -73,7 +73,7 @@ namespace Negocio
                               FROM RESERVAS 
                               WHERE IdAlumno = @idAlumno 
                               AND FechaClase BETWEEN @lunes AND @domingo
-                              AND Estado = 'Reservada'");
+                              AND Estado != 'Cancelada'");
 
                 datos.SetearParametro("@idAlumno", idAlumno);
                 datos.SetearParametro("@lunes", lunes);
@@ -244,29 +244,50 @@ namespace Negocio
         }
         public int PromoverPrimeroEnEspera(int idHorario, DateTime fechaClase)
         {
-            AccesoDatos datosLectura = new AccesoDatos();
-
-            try
+            while (true)
             {
-                datosLectura.SetearConsulta(@"SELECT TOP 1 Id
-                                     FROM RESERVAS
-                                     WHERE IdHorario = @idHorario
-                                     AND FechaClase = @fechaClase
-                                     AND Estado = 'EnEspera'
-                                     ORDER BY FechaAlta");
+                AccesoDatos datosLectura = new AccesoDatos();
+                int idReserva;
+                bool alumnoActivo;
+                DateTime vencimientoPlan;
 
-                datosLectura.SetearParametro("@idHorario", idHorario);
-                datosLectura.SetearParametro("@fechaClase", fechaClase);
+                try
+                {
+                    datosLectura.SetearConsulta(@"SELECT TOP 1 R.Id, A.Activo,
+                                                 A.FechaVencimientoPlan
+                                         FROM RESERVAS R
+                                         INNER JOIN ALUMNOS A ON R.IdAlumno = A.Id
+                                         WHERE R.IdHorario = @idHorario
+                                         AND R.FechaClase = @fechaClase
+                                         AND R.Estado = 'EnEspera'
+                                         ORDER BY R.FechaAlta, R.Id");
 
-                datosLectura.EjecutarLectura();
+                    datosLectura.SetearParametro("@idHorario", idHorario);
+                    datosLectura.SetearParametro("@fechaClase", fechaClase);
 
-                if (!datosLectura.Lector.Read())
-                    return 0;
+                    datosLectura.EjecutarLectura();
 
-                int idReserva = (int)datosLectura.Lector["Id"];
+                    if (!datosLectura.Lector.Read())
+                        return 0;
 
-                datosLectura.CerrarConexion();
+                    idReserva = (int)datosLectura.Lector["Id"];
+                    alumnoActivo = (bool)datosLectura.Lector["Activo"];
+                    vencimientoPlan = (DateTime)datosLectura.Lector["FechaVencimientoPlan"];
+                }
+                finally
+                {
+                    datosLectura.CerrarConexion();
+                }
 
+                // verifica que el alumno siga activo y tenga el plan vigente
+                if (!alumnoActivo || vencimientoPlan.Date < DateTime.Today ||
+                    vencimientoPlan.Date < fechaClase.Date)
+                {
+                    Cancelar(idReserva);
+                    continue;
+                }
+
+                // confirma la reserva del alumno
                 AccesoDatos datosActualizacion = new AccesoDatos();
 
                 try
@@ -276,7 +297,6 @@ namespace Negocio
                                                 WHERE Id = @idReserva");
 
                     datosActualizacion.SetearParametro("@idReserva", idReserva);
-
                     datosActualizacion.EjecutarAccion();
 
                     return idReserva;
@@ -285,10 +305,6 @@ namespace Negocio
                 {
                     datosActualizacion.CerrarConexion();
                 }
-            }
-            finally
-            {
-                datosLectura.CerrarConexion();
             }
         }
     }

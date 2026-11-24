@@ -15,6 +15,15 @@ namespace Presentacion
     {
 
         /// <summary>
+        /// Control litTitulo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litTitulo;
+
+        /// <summary>
         /// Control phAlumnoAdmin.
         /// </summary>
         /// <remarks>
@@ -51,13 +60,13 @@ namespace Presentacion
         protected global::System.Web.UI.WebControls.DropDownList ddlHorario;
 
         /// <summary>
-        /// Control txtFechaClase.
+        /// Control ddlFechaClase.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtFechaClase;
+        protected global::System.Web.UI.WebControls.DropDownList ddlFechaClase;
 
         /// <summary>
         /// Control btnReservar.
@@ -85,6 +94,42 @@ namespace Presentacion
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMensajeReserva;
+
+        /// <summary>
+        /// Control ddlFiltroEstado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFiltroEstado;
+
+        /// <summary>
+        /// Control phFiltrosAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phFiltrosAdmin;
+
+        /// <summary>
+        /// Control ddlFiltroActividad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFiltroActividad;
+
+        /// <summary>
+        /// Control txtFiltroFecha.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFiltroFecha;
 
         /// <summary>
         /// Control dgvReservas.

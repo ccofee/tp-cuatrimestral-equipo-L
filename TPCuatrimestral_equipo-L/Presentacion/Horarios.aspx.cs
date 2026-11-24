@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Dominio;
+using Negocio;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Web.UI;
-using Dominio;
-using Negocio;
 
 namespace Presentacion
 {
@@ -188,9 +189,35 @@ namespace Presentacion
 
         private void CargarGrilla()
         {
-            //listado de horarios
             HorarioNegocio negocio = new HorarioNegocio();
-            dgvHorarios.DataSource = negocio.Listar();
+            Session["ListaHorarios"] = negocio.Listar();
+
+            AplicarFiltroHorario();
+        }
+        protected void txtFiltroHorario_TextChanged(object sender, EventArgs e)
+        {
+            dgvHorarios.SelectedIndex = -1;
+            AplicarFiltroHorario();
+        }
+
+        private void AplicarFiltroHorario()
+        {
+            List<Horario> horarios = Session["ListaHorarios"] as List<Horario>;
+
+            if (horarios == null)
+                return;
+
+            string filtro = txtFiltroHorario.Text.Trim().ToLower();
+
+            // filtra por actividad o dia
+            if (filtro != "")
+            {
+                horarios = horarios.FindAll(x =>
+                    x.Actividad.Nombre.ToLower().Contains(filtro) ||
+                    ObtenerNombreDia(x.DiaSemana).ToLower().Contains(filtro));
+            }
+
+            dgvHorarios.DataSource = horarios;
             dgvHorarios.DataBind();
         }
         protected string ObtenerNombreDia(int dia)
@@ -202,13 +229,13 @@ namespace Presentacion
                 case 2:
                     return "Martes";
                 case 3:
-                    return "Miercoles";
+                    return "Miércoles";
                 case 4:
                     return "Jueves";
                 case 5:
                     return "Viernes";
                 case 6:
-                    return "Sabado";
+                    return "Sábado";
                 case 7:
                     return "Domingo";
                 default:

@@ -84,8 +84,19 @@
                 <asp:Label ID="lblErrorHorario" runat="server" CssClass="validacion" Visible="false"></asp:Label>
 
             </div>
-        </div>
-
+                </div>
+                <div class="row mb-3">
+            <div class="col-md-4">
+                <label>Buscar horario</label>
+                <asp:TextBox
+                    ID="txtFiltroHorario"
+                    runat="server"
+                    CssClass="form-control"
+                    placeholder="Buscar por actividad o día"
+                    AutoPostBack="true"
+                    OnTextChanged="txtFiltroHorario_TextChanged" />
+                </div>
+            </div>
         <asp:GridView ID="dgvHorarios"
             runat="server"
             AutoGenerateColumns="False"
