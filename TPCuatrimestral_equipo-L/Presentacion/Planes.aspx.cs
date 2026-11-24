@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Web.UI;
 using Dominio;
@@ -103,8 +104,20 @@ namespace Presentacion
                 throw;
             }
 
-            LimpiarFormulario();
+            LimpiarCampos();
             CargarGrilla();
+        }
+
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            List<Plan> lista = (List<Plan>)Session["listaPlanes"];
+            List<Plan> listaFiltrada = lista.FindAll(x =>
+                x.Descripcion.ToUpper().Contains(txtFiltro.Text.ToUpper())
+            );
+
+            LimpiarFormulario();
+            dgvPlanes.DataSource = listaFiltrada;
+            dgvPlanes.DataBind();
         }
 
         protected void btnEliminar_Click(object sender, EventArgs e)
@@ -135,7 +148,7 @@ namespace Presentacion
                 throw;
             }
 
-            LimpiarFormulario();
+            LimpiarCampos();
             CargarGrilla();
         }
 
@@ -143,7 +156,9 @@ namespace Presentacion
         {
             //listado de planes
             PlanNegocio negocio = new PlanNegocio();
-            dgvPlanes.DataSource = negocio.Listar();
+            List<Plan> lista = negocio.Listar();
+            Session["listaPlanes"] = lista;
+            dgvPlanes.DataSource = lista;
             dgvPlanes.DataBind();
         }
 
@@ -159,6 +174,12 @@ namespace Presentacion
             lblErrorPlan.Visible = false;
 
             dgvPlanes.SelectedIndex = -1;
+        }
+
+        private void LimpiarCampos()
+        {
+            LimpiarFormulario();
+            txtFiltro.Text = "";
         }
     }
 }

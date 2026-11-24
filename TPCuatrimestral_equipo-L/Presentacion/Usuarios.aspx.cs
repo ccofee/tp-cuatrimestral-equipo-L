@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Web.UI;
 using Dominio;
@@ -111,7 +112,7 @@ namespace Presentacion
                 throw;
             }
 
-            LimpiarFormulario();
+            LimpiarCampos();
             CargarGrilla();
 
             if (advertencia != null)
@@ -123,8 +124,22 @@ namespace Presentacion
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            LimpiarFormulario();
+            LimpiarCampos();
             CargarGrilla();
+        }
+
+        protected void txtFiltro_TextChanged(object sender, EventArgs e)
+        {
+            List<Usuario> lista = (List<Usuario>)Session["listaUsuarios"];
+            List<Usuario> listaFiltrada = lista.FindAll(x =>
+                x.Email.ToUpper().Contains(txtFiltro.Text.ToUpper()) ||
+                x.Nombre.ToUpper().Contains(txtFiltro.Text.ToUpper()) ||
+                x.Apellido.ToUpper().Contains(txtFiltro.Text.ToUpper())
+            );
+
+            LimpiarFormulario();
+            dgvUsuarios.DataSource = listaFiltrada;
+            dgvUsuarios.DataBind();
         }
 
         protected void btnEliminar_Click(object sender, EventArgs e)
@@ -157,14 +172,16 @@ namespace Presentacion
                 throw;
             }
 
-            LimpiarFormulario();
+            LimpiarCampos();
             CargarGrilla();
         }
 
         private void CargarGrilla()
         {
             UsuarioNegocio negocio = new UsuarioNegocio();
-            dgvUsuarios.DataSource = negocio.Listar();
+            List<Usuario> lista = negocio.Listar();
+            Session["listaUsuarios"] = lista;
+            dgvUsuarios.DataSource = lista;
             dgvUsuarios.DataBind();
         }
 
@@ -180,6 +197,12 @@ namespace Presentacion
             lblErrorUsuario.Visible = false;
 
             dgvUsuarios.SelectedIndex = -1;
+        }
+
+        private void LimpiarCampos()
+        {
+            LimpiarFormulario();
+            txtFiltro.Text = "";
         }
     }
 }

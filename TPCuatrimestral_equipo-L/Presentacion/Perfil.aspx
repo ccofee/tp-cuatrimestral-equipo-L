@@ -32,23 +32,27 @@
     <asp:PlaceHolder ID="phCambiarClave" runat="server" Visible="false">
         <div class="card" style="max-width: 480px;">
             <div class="card-body">
-                <h5 class="card-title">Cambiar contraseña</h5>
-                <div class="mb-3">
-                    <label for="txtNuevaClave" class="form-label">Nueva contraseña</label>
-                    <asp:TextBox ID="txtNuevaClave" runat="server" CssClass="form-control" TextMode="Password" />
-                    <asp:RequiredFieldValidator runat="server"
-                        ControlToValidate="txtNuevaClave" ErrorMessage="La contraseña es requerida" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
-                </div>
-                <div class="mb-3">
-                    <label for="txtConfirmarClave" class="form-label">Confirmar contraseña</label>
-                    <asp:TextBox ID="txtConfirmarClave" runat="server" CssClass="form-control" TextMode="Password" />
-                    <asp:RequiredFieldValidator runat="server"
-                        ControlToValidate="txtConfirmarClave" ErrorMessage="Confirmá la contraseña" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
-                    <asp:CompareValidator runat="server"
-                        ControlToValidate="txtConfirmarClave" ControlToCompare="txtNuevaClave" ErrorMessage="Las contraseñas no coinciden" CssClass="validacion" Display="Dynamic"></asp:CompareValidator>
-                </div>
-                <asp:Button ID="btnCambiarClave" runat="server" CssClass="btn btn-primary" Text="Actualizar contraseña" OnClick="btnCambiarClave_Click" />
-                <asp:Label ID="lblMensaje" runat="server" CssClass="d-block mt-2" Visible="false"></asp:Label>
+                <button type="button" class="btn btn-link card-title p-0 text-decoration-none" data-bs-toggle="collapse" data-bs-target="#collapseCambiarClave" aria-expanded="false" aria-controls="collapseCambiarClave">
+                    Cambiar contraseña
+                </button>
+                <asp:Panel ID="collapseCambiarClave" runat="server" CssClass="collapse" ClientIDMode="Static">
+                    <div class="mb-3 mt-3">
+                        <label for="txtNuevaClave" class="form-label">Nueva contraseña</label>
+                        <asp:TextBox ID="txtNuevaClave" runat="server" CssClass="form-control" TextMode="Password" />
+                        <asp:RequiredFieldValidator runat="server"
+                            ControlToValidate="txtNuevaClave" ErrorMessage="La contraseña es requerida" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
+                    </div>
+                    <div class="mb-3">
+                        <label for="txtConfirmarClave" class="form-label">Confirmar contraseña</label>
+                        <asp:TextBox ID="txtConfirmarClave" runat="server" CssClass="form-control" TextMode="Password" />
+                        <asp:RequiredFieldValidator runat="server"
+                            ControlToValidate="txtConfirmarClave" ErrorMessage="Confirmá la contraseña" CssClass="validacion" Display="Dynamic"></asp:RequiredFieldValidator>
+                        <asp:CompareValidator runat="server"
+                            ControlToValidate="txtConfirmarClave" ControlToCompare="txtNuevaClave" ErrorMessage="Las contraseñas no coinciden" CssClass="validacion" Display="Dynamic"></asp:CompareValidator>
+                    </div>
+                    <asp:Button ID="btnCambiarClave" runat="server" CssClass="btn btn-primary" Text="Actualizar contraseña" OnClick="btnCambiarClave_Click" />
+                    <asp:Label ID="lblMensaje" runat="server" CssClass="d-block mt-2" Visible="false"></asp:Label>
+                </asp:Panel>
             </div>
         </div>
     </asp:PlaceHolder>

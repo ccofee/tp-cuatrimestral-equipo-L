@@ -27,8 +27,7 @@
                 </div>
                 <div class="col-md-3">
                     <asp:Label ID="lblClave" runat="server" AssociatedControlID="txtClave" CssClass="form-label" Text="Contraseña" />
-                    <asp:TextBox ID="txtClave" runat="server" CssClass="form-control" MaxLength="100" TextMode="Password" />
-                    <small class="text-muted">Vacío para no cambiarla</small>
+                    <asp:TextBox ID="txtClave" runat="server" CssClass="form-control" MaxLength="100" TextMode="Password" placeholder="Vacío para no cambiarla" />
                 </div>
                 <div class="col-md-2">
                     <asp:Label ID="lblRol" runat="server" AssociatedControlID="ddlRol" CssClass="form-label" Text="Rol" />
@@ -59,6 +58,12 @@
             </div>
             <asp:Label ID="lblErrorUsuario" runat="server" CssClass="validacion" Visible="false"></asp:Label>
         </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="txtFiltro" class="form-label">Filtrar</label>
+        <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control"
+            AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
     </div>
 
     <asp:GridView ID="dgvUsuarios" runat="server" AutoGenerateColumns="false" AutoGenerateSelectButton="true" DataKeyNames="Id"

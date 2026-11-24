@@ -49,6 +49,7 @@ namespace Presentacion
         protected void btnCambiarClave_Click(object sender, EventArgs e)
         {
             lblMensaje.Visible = false;
+            collapseCambiarClave.CssClass = "collapse show";
 
             Page.Validate();
             if (!Page.IsValid)

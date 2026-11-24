@@ -55,6 +55,12 @@
         </div>
     </div>
 
+    <div class="mb-3">
+        <label for="txtFiltro" class="form-label">Filtrar</label>
+        <asp:TextBox ID="txtFiltro" runat="server" CssClass="form-control"
+            AutoPostBack="true" OnTextChanged="txtFiltro_TextChanged"></asp:TextBox>
+    </div>
+
     <asp:GridView ID="dgvPlanes" runat="server" AutoGenerateColumns="false" AutoGenerateSelectButton="true" DataKeyNames="Id"
         CssClass="table table-striped table-hover align-middle" GridLines="None"
         EmptyDataText="No hay planes activos." OnSelectedIndexChanged="dgvPlanes_SelectedIndexChanged">
