@@ -52,7 +52,6 @@
 
     <div class="row">
 
-
         <div class="col-md-4">
             <!-- DNI obligatorio y 7 u 8 digitos -->
             <div class="mb-3">
@@ -151,7 +150,10 @@
                     AutoGenerateColumns="False"
                     AutoGenerateSelectButton="True"
                     DataKeyNames="Id"
-                    OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged">
+                    OnSelectedIndexChanged="dgvAlumnos_SelectedIndexChanged"
+                    AllowPaging="true"
+                    PageSize="12"
+                    OnPageIndexChanging="dgvAlumnos_PageIndexChanging">
                     <Columns>
                         <asp:BoundField DataField="DNI" HeaderText="DNI" />
                         <asp:BoundField DataField="NombreCompleto" HeaderText="Alumno" />

@@ -112,10 +112,27 @@ namespace Presentacion
             }
         }
 
+
+        protected void dgvAlumnos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                dgvAlumnos.PageIndex = e.NewPageIndex;
+                aplicarFiltros();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
+        }
+
+
         protected void txtFiltro_TextChanged(object sender, EventArgs e)
         {
             try
             {
+                dgvAlumnos.PageIndex = 0;
                 aplicarFiltros();
             }
             catch (Exception ex)
@@ -129,6 +146,7 @@ namespace Presentacion
         {
             try
             {
+                dgvAlumnos.PageIndex = 0;
                 aplicarFiltros();
             }
             catch (Exception ex)
@@ -247,6 +265,7 @@ namespace Presentacion
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             limpiarCampos();
+            dgvAlumnos.PageIndex = 0;
             dgvAlumnos.DataSource = (List<Alumno>)Session["listaAlumnos"];
             dgvAlumnos.DataBind();
         }
