@@ -47,7 +47,7 @@ namespace Presentacion
             AlumnoNegocio negocio = new AlumnoNegocio();
 
             ddlAlumno.DataSource = negocio.listar();
-            ddlAlumno.DataTextField = "Nombre";
+            ddlAlumno.DataTextField = "NombreCompleto";
             ddlAlumno.DataValueField = "Id";
             ddlAlumno.DataBind();
         }
@@ -303,6 +303,7 @@ namespace Presentacion
 
                     cuerpo = "Hola " + alumno.Nombre + ",\n\n" +
                              "Tu reserva fue confirmada.\n" +
+                             "Reserva N°: " + idReserva + "\n" +
                              "Actividad: " + horario.Actividad.Nombre + "\n" +
                              "Fecha: " + fechaClase.ToString("dd/MM/yyyy") + "\n" +
                              "Horario: " + horario.HoraInicio.ToString(@"hh\:mm") +
@@ -316,6 +317,7 @@ namespace Presentacion
                     cuerpo = "Hola " + alumno.Nombre + ",\n\n" +
                              "El horario elegido no tiene cupo disponible.\n" +
                              "Quedaste en lista de espera.\n" +
+                             "Reserva N°: " + idReserva + "\n" +
                              "Actividad: " + horario.Actividad.Nombre + "\n" +
                              "Fecha: " + fechaClase.ToString("dd/MM/yyyy") + "\n" +
                              "Horario: " + horario.HoraInicio.ToString(@"hh\:mm") +
@@ -323,16 +325,23 @@ namespace Presentacion
                              "GymConnect";
                 }
 
-                servicioMail.EnviarMail(alumno.Email, asunto, cuerpo);
+                try
+                {
+                    servicioMail.EnviarMail(alumno.Email, asunto, cuerpo);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                }
             }
             if (nueva.Estado == "Reservada")
             {
-                lblMensajeReserva.Text = "Reserva realizada correctamente.";
+                lblMensajeReserva.Text = "Reserva N° " + idReserva + " realizada correctamente.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-success";
             }
             else
             {
-                lblMensajeReserva.Text = "El horario esta completo. Quedaste en lista de espera.";
+                lblMensajeReserva.Text = "Reserva N° " + idReserva + ": el horario está completo. Quedaste en lista de espera.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-warning";
             }
 
@@ -415,7 +424,7 @@ namespace Presentacion
                 reserva.FechaClase.Date + reserva.Horario.HoraInicio;
 
             // valida que falten al menos 2 horas para cancelar
-            if (fechaHoraClase <= DateTime.Now.AddHours(2))
+            if (reserva.Estado == "Reservada" && fechaHoraClase < DateTime.Now.AddHours(2))
             {
                 lblMensajeReserva.Text = "La reserva solo se puede cancelar con al menos 2 horas de anticipacion.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
@@ -469,11 +478,18 @@ namespace Presentacion
                             " a " + reservaPromovida.Horario.HoraFin.ToString(@"hh\:mm") + "\n\n" +
                             "GymConnect";
 
-                        servicioMail.EnviarMail(
-                            alumnoPromovido.Email,
-                            asunto,
-                            cuerpo
-                        );
+                        try
+                        {
+                            servicioMail.EnviarMail(
+                                alumnoPromovido.Email,
+                                asunto,
+                                cuerpo
+                            );
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                        }
                     }
                 }
             }

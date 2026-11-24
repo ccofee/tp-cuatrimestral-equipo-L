@@ -17,7 +17,8 @@
                         <asp:DropDownList
                     ID="ddlAlumno"
                     runat="server"
-                    CssClass="form-select">
+                    CssClass="form-select"
+                    AppendDataBoundItems="true">
                    <asp:ListItem Text="-- Seleccione un alumno --" Value="0" />
                     </asp:DropDownList>
                     </div>
