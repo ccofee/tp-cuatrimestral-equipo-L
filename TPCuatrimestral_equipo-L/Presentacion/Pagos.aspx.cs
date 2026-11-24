@@ -74,6 +74,7 @@ namespace Presentacion
         {
             try
             {
+                dgvPagos.PageIndex = 0;
                 aplicarFiltros();
             }
             catch (Exception ex)
@@ -87,6 +88,7 @@ namespace Presentacion
         {
             try
             {
+                dgvPagos.PageIndex = 0;
                 aplicarFiltros();
             }
             catch (Exception ex)
@@ -100,6 +102,7 @@ namespace Presentacion
         {
             try
             {
+                dgvPagos.PageIndex = 0;
                 aplicarFiltros();
             }
             catch (Exception ex)
@@ -141,8 +144,8 @@ namespace Presentacion
                 total += item.Monto;
             }
 
-            litCantidadPagos.Text = lista.Count.ToString();
-            litTotalRecaudado.Text = total.ToString("C");
+            lblCantidadPagos.Text = lista.Count.ToString();
+            lblTotalRecaudado.Text = total.ToString("C");
         }
 
         protected void btnLimpiar_Click(object sender, EventArgs e)
@@ -150,9 +153,25 @@ namespace Presentacion
             txtFiltro.Text = string.Empty;
             ddlPeriodo.SelectedIndex = 0;
             ddlPlan.SelectedIndex = 0;
+            dgvPagos.PageIndex = 0;
 
             List<Pago> lista = (List<Pago>)Session["listaPagos"];
             enlazarGrillaYResumen(lista);
+        }
+
+
+        protected void dgvPagos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            try
+            {
+                dgvPagos.PageIndex = e.NewPageIndex;
+                aplicarFiltros();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                throw ex;
+            }
         }
     }
 }

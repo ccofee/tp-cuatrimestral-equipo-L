@@ -15,22 +15,22 @@ namespace Presentacion
     {
 
         /// <summary>
-        /// Control litCantidadPagos.
+        /// Control lblCantidadPagos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litCantidadPagos;
+        protected global::System.Web.UI.WebControls.Label lblCantidadPagos;
 
         /// <summary>
-        /// Control litTotalRecaudado.
+        /// Control lblTotalRecaudado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTotalRecaudado;
+        protected global::System.Web.UI.WebControls.Label lblTotalRecaudado;
 
         /// <summary>
         /// Control txtFiltro.

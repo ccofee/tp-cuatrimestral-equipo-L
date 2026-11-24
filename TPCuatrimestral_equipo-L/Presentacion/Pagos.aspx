@@ -12,8 +12,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <h6 class="card-title text-muted">Cantidad de Cobros</h6>
-                    <h3>
-                        <asp:Literal ID="litCantidadPagos" runat="server" Text="0"></asp:Literal></h3>
+                    <h3><asp:Label ID="lblCantidadPagos" runat="server" Text="0"></asp:Label></h3>
                 </div>
             </div>
         </div>
@@ -21,8 +20,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <h6 class="card-title text-muted">Total Recaudado</h6>
-                    <h3>
-                        <asp:Literal ID="litTotalRecaudado" runat="server" Text="$ 0,00"></asp:Literal></h3>
+                    <h3><asp:Label ID="lblTotalRecaudado" runat="server" Text="$ 0,00"></asp:Label></h3>
                 </div>
             </div>
         </div>
@@ -57,10 +55,13 @@
         </div>
     </div>
 
-    <asp:GridView ID="dgvPagos" runat="server"
+<asp:GridView ID="dgvPagos" runat="server"
         CssClass="table table-striped table-hover"
         AutoGenerateColumns="False"
         DataKeyNames="Id"
+        AllowPaging="true"
+        PageSize="10"
+        OnPageIndexChanging="dgvPagos_PageIndexChanging"
         EmptyDataText="No hay pagos registrados para los filtros seleccionados.">
         <Columns>
             <asp:BoundField DataField="FechaPago" HeaderText="Fecha de Pago" DataFormatString="{0:dd/MM/yyyy HH:mm}" />
