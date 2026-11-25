@@ -76,6 +76,9 @@ namespace Presentacion
 
             LimpiarFormulario();
             CargarGrilla();
+
+            lblMensaje.Text = "Horario agregado correctamente.";
+            lblMensaje.Visible = true;
         }
 
         protected void btnModificar_Click(object sender, EventArgs e)
@@ -112,6 +115,9 @@ namespace Presentacion
 
             LimpiarFormulario();
             CargarGrilla();
+
+            lblMensaje.Text = "Horario modificado correctamente.";
+            lblMensaje.Visible = true;
         }
 
         protected void btnEliminar_Click(object sender, EventArgs e)
@@ -141,6 +147,9 @@ namespace Presentacion
 
             LimpiarFormulario();
             CargarGrilla();
+
+            lblMensaje.Text = "Horario dado de baja correctamente.";
+            lblMensaje.Visible = true;
         }
 
         private Horario ArmarHorario()
@@ -252,6 +261,9 @@ namespace Presentacion
 
             lblErrorHorario.Text = "";
             lblErrorHorario.Visible = false;
+
+            lblMensaje.Text = "";
+            lblMensaje.Visible = false;
 
             dgvHorarios.SelectedIndex = -1;
         }

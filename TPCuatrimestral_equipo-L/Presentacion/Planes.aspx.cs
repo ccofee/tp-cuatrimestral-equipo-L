@@ -84,11 +84,12 @@ namespace Presentacion
             }
 
             PlanNegocio negocio = new PlanNegocio();
+            bool esAlta = dgvPlanes.SelectedIndex == -1;
 
             //alta o modificacion de un plan
             try
             {
-                if (dgvPlanes.SelectedIndex == -1)
+                if (esAlta)
                 {
                     negocio.Agregar(plan);
                 }
@@ -106,6 +107,9 @@ namespace Presentacion
 
             LimpiarCampos();
             CargarGrilla();
+
+            lblMensaje.Text = esAlta ? "Plan agregado correctamente." : "Plan modificado correctamente.";
+            lblMensaje.Visible = true;
         }
 
         protected void txtFiltro_TextChanged(object sender, EventArgs e)
@@ -150,6 +154,9 @@ namespace Presentacion
 
             LimpiarCampos();
             CargarGrilla();
+
+            lblMensaje.Text = "Plan dado de baja correctamente.";
+            lblMensaje.Visible = true;
         }
 
         private void CargarGrilla()
@@ -172,6 +179,9 @@ namespace Presentacion
 
             lblErrorPlan.Text = "";
             lblErrorPlan.Visible = false;
+
+            lblMensaje.Text = "";
+            lblMensaje.Visible = false;
 
             dgvPlanes.SelectedIndex = -1;
         }

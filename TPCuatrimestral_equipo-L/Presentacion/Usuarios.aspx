@@ -57,6 +57,7 @@
                 </div>
             </div>
             <asp:Label ID="lblErrorUsuario" runat="server" CssClass="validacion" Visible="false"></asp:Label>
+            <asp:Label ID="lblMensaje" runat="server" CssClass="alert alert-success d-block mt-3" Visible="false"></asp:Label>
         </div>
     </div>
 

@@ -120,6 +120,11 @@ namespace Presentacion
                 lblErrorUsuario.Text = advertencia;
                 lblErrorUsuario.Visible = true;
             }
+            else
+            {
+                lblMensaje.Text = esAlta ? "Usuario agregado correctamente." : "Usuario modificado correctamente.";
+                lblMensaje.Visible = true;
+            }
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
@@ -174,6 +179,9 @@ namespace Presentacion
 
             LimpiarCampos();
             CargarGrilla();
+
+            lblMensaje.Text = "Usuario dado de baja correctamente.";
+            lblMensaje.Visible = true;
         }
 
         private void CargarGrilla()
@@ -195,6 +203,9 @@ namespace Presentacion
 
             lblErrorUsuario.Text = "";
             lblErrorUsuario.Visible = false;
+
+            lblMensaje.Text = "";
+            lblMensaje.Visible = false;
 
             dgvUsuarios.SelectedIndex = -1;
         }
