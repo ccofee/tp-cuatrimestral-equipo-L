@@ -352,12 +352,12 @@ namespace Presentacion
             }
             if (nueva.Estado == "Reservada")
             {
-                lblMensajeReserva.Text = "Reserva N° " + idReserva + " realizada correctamente.";
+                lblMensajeReserva.Text = "Reserva realizada correctamente.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-success";
             }
             else
             {
-                lblMensajeReserva.Text = "Reserva N° " + idReserva + ": el horario está completo. Quedaste en lista de espera.";
+                lblMensajeReserva.Text = "El horario está completo. Quedaste en lista de espera.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-warning";
             }
 
