@@ -114,6 +114,8 @@ namespace Presentacion
                 }
             }
         }
+
+
         protected void btnReservar_Click(object sender, EventArgs e)
         {
             lblMensajeReserva.Visible = false;
@@ -123,39 +125,6 @@ namespace Presentacion
             if (usuarioLogueado == null)
             {
                 Response.Redirect("Login.aspx");
-                return;
-            }
-
-            if (ddlActividad.SelectedValue == "0")
-            {
-                lblMensajeReserva.Text = "Selecciona una actividad.";
-                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
-                lblMensajeReserva.Visible = true;
-                return;
-            }
-            if (ddlHorario.SelectedValue == "0")
-            {
-                lblMensajeReserva.Text = "Selecciona un horario.";
-                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
-                lblMensajeReserva.Visible = true;
-                return;
-            }
-            
-            DateTime fechaClase;
-
-            if (!DateTime.TryParse(ddlFechaClase.SelectedValue, out fechaClase))
-            {
-                lblMensajeReserva.Text = "Selecciona una fecha valida.";
-                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
-                lblMensajeReserva.Visible = true;
-                return;
-            }
-            // evita reservar fechas pasadas
-            if (fechaClase.Date < DateTime.Today)
-            {
-                lblMensajeReserva.Text = "No podes reservar una fecha pasada.";
-                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
-                lblMensajeReserva.Visible = true;
                 return;
             }
 
@@ -190,8 +159,7 @@ namespace Presentacion
             }
 
             // Regla 1: tiene membresia vigente 
-            if (alumno.FechaVencimientoPlan < DateTime.Today ||
-                fechaClase > alumno.FechaVencimientoPlan)
+            if (alumno.FechaVencimientoPlan < DateTime.Today)
             {
                 lblMensajeReserva.Text = "Tu plan no esta vigente para la fecha seleccionada.";
                 lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
@@ -207,6 +175,48 @@ namespace Presentacion
                 lblMensajeReserva.Visible = true;
                 return;
             }
+
+            if (ddlActividad.SelectedValue == "0")
+            {
+                lblMensajeReserva.Text = "Selecciona una actividad.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
+            if (ddlHorario.SelectedValue == "0")
+            {
+                lblMensajeReserva.Text = "Selecciona un horario.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
+
+            DateTime fechaClase;
+
+            if (!DateTime.TryParse(ddlFechaClase.SelectedValue, out fechaClase))
+            {
+                lblMensajeReserva.Text = "Selecciona una fecha valida.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
+            // evita reservar fechas pasadas
+            if (fechaClase.Date < DateTime.Today)
+            {
+                lblMensajeReserva.Text = "No podes reservar una fecha pasada.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
+
+            if (fechaClase > alumno.FechaVencimientoPlan)
+            {
+                lblMensajeReserva.Text = "Tu plan no esta vigente para la fecha seleccionada.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
+
             // Regla 3: limite de las clases semanales
             if (alumno.Plan.ClasesSemanales > 0)
             {
@@ -282,7 +292,7 @@ namespace Presentacion
             );
 
             Reserva nueva = new Reserva();
-           
+
 
             nueva.Alumno = alumno;
             nueva.Horario = horario;
@@ -363,6 +373,8 @@ namespace Presentacion
             ddlFechaClase.Items.Clear();
             ddlFechaClase.Items.Add(new ListItem("-- Seleccione una fecha --", ""));
         }
+
+
         protected void btnCancelarReserva_Click(object sender, EventArgs e)
         {
             lblMensajeReserva.Visible = false;
