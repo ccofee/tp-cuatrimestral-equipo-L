@@ -82,6 +82,9 @@ namespace Presentacion
         }
         protected void ddlActividad_SelectedIndexChanged(object sender, EventArgs e)
         {
+            lblMensajeReserva.Visible = false;
+            lblMensajeReserva.Text = "";
+
             ddlHorario.Items.Clear();
             ddlFechaClase.Items.Clear();
             ddlFechaClase.Items.Add(new ListItem("-- Seleccione una fecha --", ""));
@@ -334,7 +337,7 @@ namespace Presentacion
                 }
                 catch (Exception ex)
                 {
-                    System.Diagnostics.Debug.WriteLine(ex.Message);
+                    Session["error"] = ex.ToString();
                 }
             }
             if (nueva.Estado == "Reservada")
@@ -499,7 +502,7 @@ namespace Presentacion
                         }
                         catch (Exception ex)
                         {
-                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                            Session["error"] = ex.ToString();
                         }
                     }
                 }
@@ -543,6 +546,9 @@ namespace Presentacion
 
         private void CargarFechasDisponibles()
         {
+            lblMensajeReserva.Visible = false;
+            lblMensajeReserva.Text = "";
+
             ddlFechaClase.Items.Clear();
             ddlFechaClase.Items.Add(new ListItem("-- Seleccione una fecha --", ""));
 
@@ -566,7 +572,12 @@ namespace Presentacion
             if (usuarioLogueado.Rol == 1)
             {
                 if (ddlAlumno.SelectedValue == "0")
+                {
+                    lblMensajeReserva.Text = "Seleccioná un alumno para ver las fechas disponibles.";
+                    lblMensajeReserva.CssClass = "d-block mt-3 text-warning";
+                    lblMensajeReserva.Visible = true;
                     return;
+                }
 
                 alumno = alumnoNegocio.listar().Find(
                     x => x.Id == int.Parse(ddlAlumno.SelectedValue));
@@ -577,7 +588,21 @@ namespace Presentacion
             }
 
             if (alumno == null)
+            {
+                lblMensajeReserva.Text = "No se encontro un alumno asociado a este usuario.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-danger";
+                lblMensajeReserva.Visible = true;
                 return;
+            }
+
+            if (alumno.FechaVencimientoPlan.Date < DateTime.Today)
+            {
+                lblMensajeReserva.Text = "Tu plan está vencido desde el " +
+                    alumno.FechaVencimientoPlan.ToString("dd/MM/yyyy") + ". Renovalo para poder reservar.";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-warning";
+                lblMensajeReserva.Visible = true;
+                return;
+            }
 
             DateTime fecha = DateTime.Today;
             int cantidad = 0;
@@ -601,6 +626,14 @@ namespace Presentacion
                 }
 
                 fecha = fecha.AddDays(1);
+            }
+
+            if (cantidad == 0)
+            {
+                lblMensajeReserva.Text = "No hay fechas disponibles para este horario antes de que venza tu plan (" +
+                    alumno.FechaVencimientoPlan.ToString("dd/MM/yyyy") + ").";
+                lblMensajeReserva.CssClass = "d-block mt-3 text-warning";
+                lblMensajeReserva.Visible = true;
             }
         }
         protected void ddlAlumno_SelectedIndexChanged(object sender, EventArgs e)
